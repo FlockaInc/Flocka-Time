@@ -2,14 +2,13 @@
  * Initialize Firebase
  */
 
-// justin's Firebase
 var config = {
-    apiKey: "AIzaSyBDXT7DJbr7ZW5YI3e618nn0vwXCwqv2yc",
-    authDomain: "productivity-app-bd0c2.firebaseapp.com",
-    databaseURL: "https://productivity-app-bd0c2.firebaseio.com",
-    projectId: "productivity-app-bd0c2",
-    storageBucket: "productivity-app-bd0c2.appspot.com",
-    messagingSenderId: "972237871314"
+    apiKey: "AIzaSyDHAQNOMMsN4OfyE3V14tdcXZczWHMAahc",
+    authDomain: "flocka-time.firebaseapp.com",
+    databaseURL: "https://flocka-time.firebaseio.com",
+    projectId: "flocka-time",
+    storageBucket: "flocka-time.appspot.com",
+    messagingSenderId: "176647479098"
 };
 firebase.initializeApp(config);
 
@@ -29,7 +28,7 @@ function signUp(email, password) {
             var email = data.user.email;
             var obj = {};
 
-            obj[uid] = {email: email};
+            obj[uid] = { email: email };
 
             database.ref("users/").set(obj);
 
@@ -53,16 +52,7 @@ function signUp(email, password) {
 
 function signIn(email, password) {
     firebase.auth().signInWithEmailAndPassword(email, password)
-    
-        .then(function (data) {
-            var uid = data.user.uid;
-            var email = data.user.email;
-
-            console.log("User signed in: " + email);
-
-        })
-    
-        .catch(function(error) {
+        .catch(function (error) {
             var errorCode = error.code;
             var errorMessage = error.message;
 
@@ -83,12 +73,30 @@ $("button").on("click", function (event) {
     var email = $("#email").val();
 
     if (button === "signin") {
-        signIn(email,$("#password").val());
+        signIn(email, $("#password").val());
     }
     else {
         signUp(email, $("#password").val());
     }
-    
+
     $("#email").val("");
     $("#password").val("");
+});
+
+
+/**
+ * Authentication state observer
+ */
+
+firebase.auth().onAuthStateChanged(function (user) {
+    if (user) {
+        var email = user.email;
+        var uid = user.uid;
+
+        console.log(email);
+        console.log(uid);
+    }
+    else {
+
+    }
 });
