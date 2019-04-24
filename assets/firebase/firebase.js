@@ -25,7 +25,7 @@
       hoursCoded: hoursCoded,
       dailyAverage: dailyAverage,
       languagesUsed: languagesUsed
-  }
+  };
 
   function pushToFirebase(leaderBoard){
       database.ref().push(leaderBoard);
