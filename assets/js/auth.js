@@ -18,10 +18,10 @@ var database = firebase.database();
 
 /**
  * function createUser()
- * Create user in Firebase
+ * Sign up new users
  */
 
-function createUser(email, password) {
+function signUp(email, password) {
     firebase.auth().createUserWithEmailAndPassword(email, password)
 
         .then(function (data) {
@@ -33,9 +33,36 @@ function createUser(email, password) {
 
             database.ref("users/").set(obj);
 
+            console.log("User created: " + email);
         })
 
         .catch(function (error) {
+            var errorCode = error.code;
+            var errorMessage = error.message;
+
+            console.log("Error code: " + errorCode);
+            console.log("Error message: " + errorMessage);
+        });
+}
+
+
+/**
+ * function signIn();
+ * Sign in existing users
+ */
+
+function signIn(email, password) {
+    firebase.auth().signInWithEmailAndPassword(email, password)
+    
+        .then(function (data) {
+            var uid = data.user.uid;
+            var email = data.user.email;
+
+            console.log("User signed in: " + email);
+
+        })
+    
+        .catch(function(error) {
             var errorCode = error.code;
             var errorMessage = error.message;
 
@@ -52,10 +79,16 @@ function createUser(email, password) {
 $("button").on("click", function (event) {
     event.preventDefault();
 
+    var button = $(this).val();
     var email = $("#email").val();
 
-    createUser(email, $("#password").val());
-
+    if (button === "signin") {
+        signIn(email,$("#password").val());
+    }
+    else {
+        signUp(email, $("#password").val());
+    }
+    
     $("#email").val("");
     $("#password").val("");
 });
