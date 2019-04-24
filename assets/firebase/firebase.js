@@ -12,4 +12,23 @@
   firebase.initializeApp(config);
 
   var database = firebase.database();
+
+  var rank;
+  var userName;
+  var hoursCoded;
+  var dailyAverage;
+  var languagesUsed;
+
+  var leaderBoard = {
+      rank: rank,
+      name: userName,
+      hoursCoded: hoursCoded,
+      dailyAverage: dailyAverage,
+      languagesUsed: languagesUsed
+  }
+
+  function pushToFirebase(leaderBoard){
+      database.ref().push(leaderBoard);
+  };
+
 // </script>
