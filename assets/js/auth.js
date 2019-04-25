@@ -66,21 +66,24 @@ function signIn(email, password) {
  * Sign up button event listener
  */
 
-$("button").on("click", function (event) {
+$("button").on("click", function (event) { // This function will run any time any button is clicked, needs to be resolved
     event.preventDefault();
 
     var button = $(this).val();
-    var email = $("#email").val();
+    var email = $("#" + button + "Email").val();
 
     if (button === "signin") {
-        signIn(email, $("#password").val());
-    }
-    else {
-        signUp(email, $("#password").val());
-    }
+        signIn(email, $("#signinPassword").val());
 
-    $("#email").val("");
-    $("#password").val("");
+        $("#signinEmail").val("");
+        $("#signinPassword").val("");
+    }
+    else if (button === "signup") {
+        signUp(email, $("#signupPassword").val());
+
+        $("#signupEmail").val("");
+        $("#signupPassword").val("");
+    }
 });
 
 
