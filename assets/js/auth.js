@@ -1,16 +1,6 @@
 /**
- * Initialize Firebase
+ * Variables
  */
-
-var config = {
-    apiKey: "AIzaSyDHAQNOMMsN4OfyE3V14tdcXZczWHMAahc",
-    authDomain: "flocka-time.firebaseapp.com",
-    databaseURL: "https://flocka-time.firebaseio.com",
-    projectId: "flocka-time",
-    storageBucket: "flocka-time.appspot.com",
-    messagingSenderId: "176647479098"
-};
-firebase.initializeApp(config);
 
 var database = firebase.database();
 
