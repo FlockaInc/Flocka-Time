@@ -11,5 +11,6 @@ const codeTimeStartButton = ".codeTimeStart";
 const codeTimeStopButton = ".codeTimeStop";
 const signInButton = ".signInButton";
 const signOutButton = ".signOutButton";
+const authSubmitButton = ".authSubmit"
 const welcomeContainer = ".welcomeContainer";
 const welcomeElement = "#welcomeElement";
