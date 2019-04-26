@@ -12,7 +12,3 @@ function signInDisplay(){
         $("#welcomeElement").hide();
     }
 }
-
-$(".signOutButton").on("click", function(){
-    firebase.auth().signOut()
-});
