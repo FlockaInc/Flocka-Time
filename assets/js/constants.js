@@ -7,3 +7,5 @@ const rankTableHeaderId = "#rankTableEntry";
 const programmerTableHeaderID = "#programerTableEntry";
 const totalCodetimeTableHeaderID = "#codeTimeTableEntry";
 const dailyAverageTableHeaderID = "#dailyAverageTableEntry"
+const codeTimeStartButton = ".codeTimeStart";
+const codeTimeStopButton = ".codeTimeStop";
