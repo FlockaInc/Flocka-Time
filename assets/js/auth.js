@@ -78,6 +78,7 @@ firebase.auth().onAuthStateChanged(function (user) {
         console.log(auth.uid);
     }
     else {
-
+        auth.uid = "";
+        console.log(auth.uid);
     }
 });
