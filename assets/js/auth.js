@@ -42,29 +42,7 @@ var auth = {
 };
 
 
-/**
- * Sign up button event listener
- */
 
-$("button").on("click", function (event) { // This function will run any time any button is clicked, needs to be resolved
-    event.preventDefault();
-
-    var button = $(this).val();
-    var email = $("#" + button + "Email").val();
-
-    if (button === "signin") {
-        auth.signIn(email, $("#signinPassword").val());
-
-        $("#signinEmail").val("");
-        $("#signinPassword").val("");
-    }
-    else if (button === "signup") {
-        auth.signUp(email, $("#signupPassword").val());
-
-        $("#signupEmail").val("");
-        $("#signupPassword").val("");
-    }
-});
 
 
 /**
