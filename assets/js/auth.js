@@ -68,16 +68,24 @@ $("button").on("click", function (event) { // This function will run any time an
 
 
 /**
+ * Sign out button event listener
+ */
+
+$(".signOutButton").on("click", function(){
+    firebase.auth().signOut()
+    signInDisplay();
+});
+
+
+/**
  * Authentication state observer
  */
 
 firebase.auth().onAuthStateChanged(function (user) {
     if (user) {
         auth.uid = user.uid;
-
-        console.log(auth.uid);
     }
     else {
-
+        auth.uid = "";
     }
 });
