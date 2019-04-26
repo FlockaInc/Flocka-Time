@@ -4,14 +4,10 @@
 
 var database = firebase.database();
 
-
-/**
- * function createUser()
- * Sign up new users
- */
-
-function signUp(email, password) {
-    firebase.auth().createUserWithEmailAndPassword(email, password)
+var auth = {
+    uid: "",
+    signUp: function(email, password) {
+        firebase.auth().createUserWithEmailAndPassword(email, password)
 
         .then(function (data) {
             var uid = data.user.uid;
@@ -32,16 +28,9 @@ function signUp(email, password) {
             console.log("Error code: " + errorCode);
             console.log("Error message: " + errorMessage);
         });
-}
-
-
-/**
- * function signIn();
- * Sign in existing users
- */
-
-function signIn(email, password) {
-    firebase.auth().signInWithEmailAndPassword(email, password)
+    },
+    signIn: function(email, password) {
+        firebase.auth().signInWithEmailAndPassword(email, password)
         .catch(function (error) {
             var errorCode = error.code;
             var errorMessage = error.message;
@@ -49,7 +38,8 @@ function signIn(email, password) {
             console.log("Error code: " + errorCode);
             console.log("Error message: " + errorMessage);
         });
-}
+    }
+};
 
 
 /**
@@ -63,13 +53,13 @@ $("button").on("click", function (event) { // This function will run any time an
     var email = $("#" + button + "Email").val();
 
     if (button === "signin") {
-        signIn(email, $("#signinPassword").val());
+        auth.signIn(email, $("#signinPassword").val());
 
         $("#signinEmail").val("");
         $("#signinPassword").val("");
     }
     else if (button === "signup") {
-        signUp(email, $("#signupPassword").val());
+        auth.signUp(email, $("#signupPassword").val());
 
         $("#signupEmail").val("");
         $("#signupPassword").val("");
@@ -83,11 +73,9 @@ $("button").on("click", function (event) { // This function will run any time an
 
 firebase.auth().onAuthStateChanged(function (user) {
     if (user) {
-        var email = user.email;
-        var uid = user.uid;
+        auth.uid = user.uid;
 
-        console.log(email);
-        console.log(uid);
+        console.log(auth.uid);
     }
     else {
 
