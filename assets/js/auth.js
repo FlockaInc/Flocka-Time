@@ -18,9 +18,9 @@ function signUp(email, password) {
             var email = data.user.email;
             var obj = {};
 
-            obj[uid] = { email: email };
+            obj = { email: email };
 
-            database.ref("users/").set(obj);
+            database.ref("users/" + uid + "/").set(obj);
 
             console.log("User created: " + email);
         })
