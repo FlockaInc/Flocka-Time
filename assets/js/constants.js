@@ -9,3 +9,7 @@ const totalCodetimeTableHeaderID = "#codeTimeTableEntry";
 const dailyAverageTableHeaderID = "#dailyAverageTableEntry"
 const codeTimeStartButton = ".codeTimeStart";
 const codeTimeStopButton = ".codeTimeStop";
+const signInButton = ".signInButton";
+const signOutButton = ".signOutButton";
+const welcomeContainer = ".welcomeContainer";
+const welcomeElement = "#welcomeElement";
