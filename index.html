@@ -49,7 +49,7 @@
           <button type="button" class="btn btn-primary signOutButton hide" data-toggle="modal" data-target="#sign-out-form">Sign Out</button>  
       <button type="button" class="btn btn-primary signInButton hide" data-toggle="modal" data-target="#sign-in-form">
         Sign In
-    </button>
+      </button>
     </div>
   </nav>
   <br>
@@ -61,6 +61,11 @@
 
   <br>
   <div class="container">
+    <div class='row'>
+      <div id='chartContainer' class='my-4' style='height: 300px; width: 100%;'>
+
+      </div>
+    </div>
     <div class="row">
       <div class="col-md-0 col-lg-1"></div>
       <div class="col-md-12 col-lg-10">
@@ -80,67 +85,62 @@
   </div>
 
   <!-- Modal start -->
-  <div class="modal fade" id="sign-in-form" tabindex="-1" role="dialog"
-  aria-labelledby="sign-in-form-title" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered" role="document">
+  <div class="modal fade" id="sign-in-form" tabindex="-1" role="dialog" aria-labelledby="sign-in-form-title"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
       <div class="modal-content">
-          <div class="modal-body">
-              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                  <span aria-hidden="true">&times;</span>
-              </button>
+        <div class="modal-body">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
 
-              <ul class="nav nav-tabs" id="myTab" role="tablist">
-                  <li class="nav-item">
-                      <a class="nav-link active" id="signin-tab" data-toggle="tab" href="#signin" role="tab"
-                          aria-controls="home" aria-selected="true">Sign In</a>
-                  </li>
-                  <li class="nav-item">
-                      <a class="nav-link" id="signup-tab" data-toggle="tab" href="#signup" role="tab"
-                          aria-controls="profile" aria-selected="false">Sign Up</a>
-                  </li>
-              </ul>
-              <div class="tab-content" id="myTabContent">
-                  <div class="tab-pane fade show active" id="signin" role="tabpanel"
-                      aria-labelledby="signin-tab">
-                      <div id="form-container">
-                          <form>
-                              <div class="form-group">
-                                  <label for="signinEmail">Email</label>
-                                  <input type="email" class="form-control" id="signinEmail"
-                                      placeholder="email@example.com">
-                              </div>
-                              <div class="form-group">
-                                  <label for="signinPassword">Password</label>
-                                  <input type="password" class="form-control" id="signinPassword"
-                                      placeholder="password">
-                              </div>
-                              <button type="submit" class="btn btn-primary authSubmit" value="signin">Sign In</button>
-                          </form>
-                      </div>
+          <ul class="nav nav-tabs" id="myTab" role="tablist">
+            <li class="nav-item">
+              <a class="nav-link active" id="signin-tab" data-toggle="tab" href="#signin" role="tab"
+                aria-controls="home" aria-selected="true">Sign In</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" id="signup-tab" data-toggle="tab" href="#signup" role="tab" aria-controls="profile"
+                aria-selected="false">Sign Up</a>
+            </li>
+          </ul>
+          <div class="tab-content" id="myTabContent">
+            <div class="tab-pane fade show active" id="signin" role="tabpanel" aria-labelledby="signin-tab">
+              <div id="form-container">
+                <form>
+                  <div class="form-group">
+                    <label for="signinEmail">Email</label>
+                    <input type="email" class="form-control" id="signinEmail" placeholder="email@example.com">
                   </div>
-                  <div class="tab-pane fade" id="signup" role="tabpanel" aria-labelledby="signup-tab">
-                      <div id="form-container">
-                          <form>
-                              <div class="form-group">
-                                  <label for="signupEmail">Email</label>
-                                  <input type="email" class="form-control" id="signupEmail"
-                                      placeholder="email@example.com">
-                              </div>
-                              <div class="form-group">
-                                  <label for="signupPassword">Password</label>
-                                  <input type="password" class="form-control" id="signupPassword"
-                                      placeholder="password">
-                              </div>
-                              <button type="submit" class="btn btn-primary authSubmit" value="signup">Sign Up</button>
-                          </form>
-                      </div>
+                  <div class="form-group">
+                    <label for="signinPassword">Password</label>
+                    <input type="password" class="form-control" id="signinPassword" placeholder="password">
                   </div>
+                  <button type="submit" class="btn btn-primary authSubmit" value="signin">Sign In</button>
+                </form>
               </div>
+            </div>
+            <div class="tab-pane fade" id="signup" role="tabpanel" aria-labelledby="signup-tab">
+              <div id="form-container">
+                <form>
+                  <div class="form-group">
+                    <label for="signupEmail">Email</label>
+                    <input type="email" class="form-control" id="signupEmail" placeholder="email@example.com">
+                  </div>
+                  <div class="form-group">
+                    <label for="signupPassword">Password</label>
+                    <input type="password" class="form-control" id="signupPassword" placeholder="password">
+                  </div>
+                  <button type="submit" class="btn btn-primary authSubmit" value="signup">Sign Up</button>
+                </form>
+              </div>
+            </div>
           </div>
+        </div>
       </div>
+    </div>
   </div>
-</div>
-<!-- Modal end -->
+  <!-- Modal end -->
 
   <script src="https://www.gstatic.com/firebasejs/5.10.1/firebase.js"></script>
   <!-- Optional JavaScript -->
@@ -154,6 +154,8 @@
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
     integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous">
     </script>
+  <script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.js"></script>
   <script src='assets/js/constants.js'></script>
   <script src='assets/firebase/firebase.js'></script>
   <script src='assets/js/auth.js'></script>

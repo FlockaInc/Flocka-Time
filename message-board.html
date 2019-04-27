@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="assets/css/messageboard.css">
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+
+    <title>Message Board</title>
+</head>
+
+<body>
+
+    <h1>Message Board</h1>
+
+    <div id="messageDisplay"></div>
+
+    <form>
+        <div class="form-group">
+            <div class="input-group-prepend">
+                <input type="text" class="form-control" id="inputName" placeholder="Enter a name to be displayed">
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="input-group-prepend">
+                <input type="text" class="form-control" id="inputMessage" placeholder="Enter a message">
+            </div>
+        </div>
+        <button type="submit" class="btn btn-primary" id='messageButton'>Submit</button>
+    </form>
+
+
+    <script src="assets/js/message.js"></script>
+</body>
+
+</html>
