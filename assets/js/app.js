@@ -5,14 +5,17 @@ $(function() {
 
   function handleSignIn() {
     console.log('user signed in');
+    signInDisplay();
   }
   function signInDisplay() {
     if (auth.uid = "") {
       $(".signOutButton").removeClass("hide");
       $(".welcomeContainer").removeClass("hide");
       $("#welcomeElement").text("Welcome, ");
+      (console.log("signed in"));
     } else {
       $(".signInButton").removeClass("hide");
+      console.log("signed out");
     }
 
   }
