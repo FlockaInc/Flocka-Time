@@ -15,12 +15,13 @@ $(function () {
   }
 
   function signInDisplay() {
-    if (auth.uid = "") {
+    if (auth.uid) {
       $(".signOutButton").removeClass("hide");
       $(".welcomeContainer").removeClass("hide");
-      $("#welcomeElement").text("Welcome, ");
+      $("#welcomeElement").text(" Welcome");
       (console.log("signed in"));
     } else {
+      debugger;
       $(".signInButton").removeClass("hide");
       console.log("signed out");
     }
