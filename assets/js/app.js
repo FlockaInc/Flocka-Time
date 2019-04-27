@@ -1,4 +1,11 @@
 $(function() {
+  var app = {
+    authListener: notificationService.addObserver('AUTH_SIGNIN', this, handleSignIn)
+  }
+
+  function handleSignIn() {
+    console.log('user signed in');
+  }
   function signInDisplay() {
     if (auth.uid = "") {
       $(".signOutButton").removeClass("hide");
