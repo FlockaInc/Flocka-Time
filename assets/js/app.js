@@ -1,3 +1,6 @@
+$("document").ready(function(){
+
+
 function signInDisplay(){
     if (auth.uid = ""){
         $(".signInButton").hide();
@@ -16,3 +19,7 @@ function signInDisplay(){
 $(".signOutButton").on("click", function(){
     firebase.auth().signOut()
 });
+
+signInDisplay();
+console.log(auth.uid);
+})
