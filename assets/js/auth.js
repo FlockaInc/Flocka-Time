@@ -63,6 +63,7 @@ $(".signOutButton").on("click", function(){
 firebase.auth().onAuthStateChanged(function (user) {
     if (user) {
         auth.uid = user.uid;
+        notificationService.postNotification('AUTH_SIGNIN', null);
     }
     else {
         auth.uid = "";
