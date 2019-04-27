@@ -1,4 +1,4 @@
-$(function() {
+// $(function() {
   function signInDisplay() {
     if (auth.uid = "") {
       $(".signOutButton").removeClass("hide");
@@ -75,4 +75,5 @@ $(function() {
     }
   }
   generateDummyChart();
-})
+  console.log(auth.uid);
+// })

@@ -1,4 +1,4 @@
-$(function() {
+// $(function() {
     /**
  * Variables
  */
@@ -72,4 +72,4 @@ firebase.auth().onAuthStateChanged(function (user) {
     }
 });
 
-});
+// });
