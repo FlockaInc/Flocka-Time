@@ -1,17 +1,17 @@
+auth.uid = "bee25141";
+email = "bee25141@gmail.com";
 function signInDisplay() {
-  if (auth.uid = "") {
-    $(".signInButton").hide();
-    $(".signOutButton").show();
-    $(".welcomeContainer").show();
-    $("#welcomeElement").show();
+  if (auth.uid === "bee25141") {
+    $(".signOutButton").removeClass("hide");
+    $(".welcomeContainer").removeClass("hide");
     $("#welcomeElement").text("Welcome, " + email);
   } else {
-    $(".signInButton").show();
-    $(".signOutButton").hide();
-    $(".welcomeContainer").hide();
-    $("#welcomeElement").hide();
+    $(".signInButton").removeClass("hide");
   }
 }
+console.log(auth.uid);
+
+signInDisplay();
 
 $(".signOutButton").on("click", function () {
   firebase.auth().signOut()
