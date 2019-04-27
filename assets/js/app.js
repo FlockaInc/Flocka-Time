@@ -1,12 +1,19 @@
-$(function() {
+$(function () {
   var app = {
-    authListener: notificationService.addObserver('AUTH_SIGNIN', this, handleSignIn)
+    authListener: notificationService.addObserver('AUTH_SIGNIN', this, handleSignIn),
+    signOutListener: notificationService.addObserver('AUTH_SIGNOUT', this, handleSignOut)
   }
 
   function handleSignIn() {
     console.log('user signed in');
     signInDisplay();
   }
+
+  function handleSignOut() {
+    // call methods related to auth sign out
+    signInDisplay();
+  }
+
   function signInDisplay() {
     if (auth.uid = "") {
       $(".signOutButton").removeClass("hide");
@@ -19,40 +26,60 @@ $(function() {
     }
 
   }
-  
-  $(".signOutButton").on("click", function () {
-    firebase.auth().signOut()
-  });
-  
   /**
    * Sign up button event listener
    */
-  
+
   $(authSubmitButton).on("click", function (event) {
     event.preventDefault();
-  
-  
-  
+    
     var button = $(this).val();
     var email = $("#" + button + "Email").val();
-  
+
     if (button === "signin") {
       console.log('Sign in button pressed');
       auth.signIn(email, $("#signinPassword").val());
-  
+
       $("#signinEmail").val("");
       $("#signinPassword").val("");
     }
     else if (button === "signup") {
       console.log('Sign up button pressed');
       auth.signUp(email, $("#signupPassword").val());
-  
+
       $("#signupEmail").val("");
       $("#signupPassword").val("");
     }
   });
-  
-  
+
+  $(".codeTimeStart").on("click", function () {
+    data.userStartTime();
+  })
+
+  $(".codeTimeStop").on("click", function () {
+    data.userStopTime();
+  })
+
+  // click submit, append message to message board
+  $("#messageButton").on("click", function () {
+    event.preventDefault();
+    // name to be displayed
+    var nameText = $("#inputName").val();
+    $("#inputName").val("");
+
+    // text for the message
+    var messageText = $("#inputMessage").val();
+    $("#inputMessage").val("");
+    var p = $("<p>");
+    p.text(nameText + ": " + messageText);
+    $("#messageDisplay").append(p);
+  })
+
+  $(".signOutButton").on("click", function () {
+    auth.signOut();
+  });
+
+
   // ** CANVAS TEST **
   function generateDummyChart() {
     var date = moment();
@@ -60,14 +87,14 @@ $(function() {
     window.onload = function () {
       var chart = new CanvasJS.Chart("chartContainer",
         {
-  
+
           title: {
             text: "Code Time (Last 7 Days)"
           },
           data: [
             {
               type: "line",
-  
+
               dataPoints: [
                 { x: new Date(2012, 03, 1), y: 123 },
                 { x: new Date(2012, 03, 2), y: 106 },
@@ -80,10 +107,11 @@ $(function() {
             }
           ]
         });
-  
+
       chart.render();
     }
   }
+
   generateDummyChart();
-  console.log(auth.uid);
-})
+
+});
