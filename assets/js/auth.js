@@ -42,28 +42,16 @@ var auth = {
 };
 
 
+
+
+
 /**
- * Sign up button event listener
+ * Sign out button event listener
  */
 
-$("button").on("click", function (event) { // This function will run any time any button is clicked, needs to be resolved
-    event.preventDefault();
-
-    var button = $(this).val();
-    var email = $("#" + button + "Email").val();
-
-    if (button === "signin") {
-        auth.signIn(email, $("#signinPassword").val());
-
-        $("#signinEmail").val("");
-        $("#signinPassword").val("");
-    }
-    else if (button === "signup") {
-        auth.signUp(email, $("#signupPassword").val());
-
-        $("#signupEmail").val("");
-        $("#signupPassword").val("");
-    }
+$(".signOutButton").on("click", function(){
+    firebase.auth().signOut()
+    signInDisplay();
 });
 
 
@@ -74,10 +62,8 @@ $("button").on("click", function (event) { // This function will run any time an
 firebase.auth().onAuthStateChanged(function (user) {
     if (user) {
         auth.uid = user.uid;
-
-        console.log(auth.uid);
     }
     else {
-
+        auth.uid = "";
     }
 });
