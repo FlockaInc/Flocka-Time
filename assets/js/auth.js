@@ -62,8 +62,10 @@ $(".signOutButton").on("click", function(){
 firebase.auth().onAuthStateChanged(function (user) {
     if (user) {
         auth.uid = user.uid;
+        signInDisplay();
     }
     else {
         auth.uid = "";
+        signInDisplay();
     }
 });

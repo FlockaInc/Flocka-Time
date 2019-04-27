@@ -1,21 +1,19 @@
-auth.uid = "bee25141";
-email = "bee25141@gmail.com";
+//Function to set signin/out button display if user signed in or not
 function signInDisplay() {
-  if (auth.uid === "bee25141") {
+  if (auth.uid === "") {
     $(".signOutButton").removeClass("hide");
     $(".welcomeContainer").removeClass("hide");
-    $("#welcomeElement").text("Welcome, " + email);
+    $("#welcomeElement").text(" Welcome ");
   } else {
     $(".signInButton").removeClass("hide");
+    // $(".signOutButton").addClass("hide");
+    // $(".welcomeContainer").addClass("hide");
   }
+  console.log(auth);
 }
-console.log(auth.uid);
 
 signInDisplay();
 
-$(".signOutButton").on("click", function () {
-  firebase.auth().signOut()
-});
 
 /**
  * Sign up button event listener
