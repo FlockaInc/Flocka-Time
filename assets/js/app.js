@@ -74,6 +74,5 @@ $(function() {
       chart.render();
     }
   }
-  console.log(auth.uid);
   generateDummyChart();
 })
