@@ -17,14 +17,12 @@ $(function () {
   //Displays appropriate sign in/out buttons on display 
   function signInDisplay() {
     if (auth.uid) {
-      debugger;
       $(".signOutButton").removeClass("hide");
       $(".signInButton").addClass("hide");
       $(".welcomeContainer").removeClass("hide");
       $("#welcomeElement").text(" Welcome!");
       (console.log("signed in"));
     } else {
-      debugger;
       $(".signInButton").removeClass("hide");
       console.log("signed out");
     }
