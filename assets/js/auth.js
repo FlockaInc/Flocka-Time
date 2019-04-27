@@ -1,4 +1,5 @@
-/**
+$(function(){
+    /**
  * Variables
  */
 
@@ -68,4 +69,6 @@ firebase.auth().onAuthStateChanged(function (user) {
         auth.uid = "";
         signInDisplay();
     }
+});
+
 });
