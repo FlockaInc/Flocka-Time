@@ -75,14 +75,8 @@ var auth = {
             event.authResponse.accessToken);
           // Sign in with the credential from the Facebook user.
           firebase.auth().signInAndRetrieveDataWithCredential(credential).catch(function (error) {
-            // Handle Errors here.
             var errorCode = error.code;
-            var errorMessage = error.message;
-            // The email of the user's account used.
-            var email = error.email;
-            // The firebase.auth.AuthCredential type that was used.
-            var credential = error.credential;
-            // ...
+            console.log(errorCode);
           });
         } else {
           // User is already signed-in Firebase with the correct user.
