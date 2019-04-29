@@ -24,6 +24,7 @@ $(function () {
       (console.log("signed in"));
     } else {
       $(".signInButton").removeClass("hide");
+      $(".signOutButton").addClass("hide");
       console.log("signed out");
     }
 
