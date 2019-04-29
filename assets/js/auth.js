@@ -1,7 +1,7 @@
 // $(function() {
-    /**
- * Variables
- */
+/**
+* Variables
+*/
 
 var database = firebase.database();
 
@@ -41,6 +41,12 @@ var auth = {
         console.log("Error message: " + errorMessage);
       });
   },
+  signOut: function() {
+    firebase.auth().signOut().then(function() {
+      auth.uid = "";
+      notificationService.postNotification('AUTH_SIGNOUT', null);
+    });
+  },
   authListener: firebase.auth().onAuthStateChanged(function (user) {
     if (user) {
       auth.uid = user.uid;
@@ -50,4 +56,30 @@ var auth = {
       auth.uid = "";
     }
   }),
+
+
+
+  // window.fbAsyncInit = function () {
+  //   FB.init({
+  //     appId: '613416699125829',
+  //     cookie: true,
+  //     xfbml: true,
+  //     version: 'v3.2'
+  //   });
+
+  //   FB.AppEvents.logPageView();
+
+  // };
+
+  // (function (d, s, id) {
+  //   var js, fjs = d.getElementsByTagName(s)[0];
+  //   if (d.getElementById(id)) { return; }
+  //   js = d.createElement(s); js.id = id;
+  //   js.src = "https://connect.facebook.net/en_US/sdk.js";
+  //   fjs.parentNode.insertBefore(js, fjs);
+  // }(document, 'script', 'facebook-jssdk'));
+
+  // FB.getLoginStatus(function (response) {
+  //   statusChangeCallback(response);
+  // });
 };
