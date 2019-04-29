@@ -121,10 +121,8 @@
                     <input type="password" class="form-control" id="signinPassword" placeholder="password">
                   </div>
                   <button type="submit" class="btn btn-primary authSubmit" value="signin">Sign In</button>
-                  <fb:login-button data-auto-logout-link="true" scope="public_profile,email" size="large">
+                  <fb:login-button class="my-2" data-auto-logout-link="true" scope="public_profile,email" size="large">
                   </fb:login-button>
-                  <!-- <div class="fb-login-button my-2" data-width="" data-size="large" data-button-type="login_with"
-                    data-auto-logout-link="false" data-use-continue-as="false"></div> -->
                 </form>
               </div>
             </div>
@@ -140,9 +138,7 @@
                     <input type="password" class="form-control" id="signupPassword" placeholder="password">
                   </div>
                   <button type="submit" class="btn btn-primary authSubmit" value="signup">Sign Up</button>
-                  <!-- <div class="fb-login-button my-2" data-width="" data-size="large" data-button-type="login_with"
-                    data-auto-logout-link="false" data-use-continue-as="false"></div> -->
-                  <fb:login-button data-auto-logout-link="true" scope="public_profile,email" size="large">
+                  <fb:login-button class="my-2" data-auto-logout-link="true" scope="public_profile,email" size="large">
                   </fb:login-button>
                 </form>
               </div>
@@ -158,9 +154,6 @@
   <script src="//connect.facebook.net/en_US/sdk.js"></script>
   <script>
     FB.init({
-      /**********************************************************************
-       * TODO(Developer): Change the value below with your Facebook app ID. *
-       **********************************************************************/
       appId: '613416699125829',
       status: true,
       xfbml: true,
