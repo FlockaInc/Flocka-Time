@@ -15,6 +15,9 @@
 </head>
 
 <body>
+  <div id="fb-root"></div>
+  <script async defer crossorigin="anonymous"
+    src="https://connect.facebook.net/en_GB/sdk.js#xfbml=1&version=v3.2&appId=613416699125829&autoLogAppEvents=1"></script>
   <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
     <a class="navbar-brand" href="#">Flocka Time</a>
     <button class="navbar-toggler " type="button" data-toggle="collapse" data-target="#navbarColor01"
@@ -42,11 +45,12 @@
         <button class="btn btn-secondary my-2 my-sm-0 codeTimeStart" type="button">Start</button>
         <button class="btn btn-secondary my-2 my-sm-0 codeTimeStop" type="button">Stop</button>
       </form>
-        <div class="welcomeContainer hide">
-          <br>
-          <p id="welcomeElement"></p>
-        </div> 
-          <button type="button" class="btn btn-primary signOutButton hide" data-toggle="modal" data-target="#sign-out-form">Sign Out</button>  
+      <div class="welcomeContainer hide">
+        <br>
+        <p id="welcomeElement"></p>
+      </div>
+      <button type="button" class="btn btn-primary signOutButton hide" data-toggle="modal"
+        data-target="#sign-out-form">Sign Out</button>
       <button type="button" class="btn btn-primary signInButton hide" data-toggle="modal" data-target="#sign-in-form">
         Sign In
       </button>
@@ -117,6 +121,10 @@
                     <input type="password" class="form-control" id="signinPassword" placeholder="password">
                   </div>
                   <button type="submit" class="btn btn-primary authSubmit" value="signin">Sign In</button>
+                  <fb:login-button data-auto-logout-link="true" scope="public_profile,email" size="large">
+                  </fb:login-button>
+                  <!-- <div class="fb-login-button my-2" data-width="" data-size="large" data-button-type="login_with"
+                    data-auto-logout-link="false" data-use-continue-as="false"></div> -->
                 </form>
               </div>
             </div>
@@ -132,6 +140,10 @@
                     <input type="password" class="form-control" id="signupPassword" placeholder="password">
                   </div>
                   <button type="submit" class="btn btn-primary authSubmit" value="signup">Sign Up</button>
+                  <!-- <div class="fb-login-button my-2" data-width="" data-size="large" data-button-type="login_with"
+                    data-auto-logout-link="false" data-use-continue-as="false"></div> -->
+                  <fb:login-button data-auto-logout-link="true" scope="public_profile,email" size="large">
+                  </fb:login-button>
                 </form>
               </div>
             </div>
@@ -143,6 +155,18 @@
   <!-- Modal end -->
 
   <script src="https://www.gstatic.com/firebasejs/5.10.1/firebase.js"></script>
+  <script src="//connect.facebook.net/en_US/sdk.js"></script>
+  <script>
+    FB.init({
+      /**********************************************************************
+       * TODO(Developer): Change the value below with your Facebook app ID. *
+       **********************************************************************/
+      appId: '613416699125829',
+      status: true,
+      xfbml: true,
+      version: 'v3.2'
+    });
+  </script>
   <!-- Optional JavaScript -->
   <!-- jQuery first, then Popper.js, then Bootstrap JS -->
   <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"

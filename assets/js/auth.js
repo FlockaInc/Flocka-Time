@@ -41,8 +41,8 @@ var auth = {
         console.log("Error message: " + errorMessage);
       });
   },
-  signOut: function() {
-    firebase.auth().signOut().then(function() {
+  signOut: function () {
+    firebase.auth().signOut().then(function () {
       auth.uid = "";
       notificationService.postNotification('AUTH_SIGNOUT', null);
     });
@@ -56,30 +56,52 @@ var auth = {
       auth.uid = "";
     }
   }),
-
-
-
-  // window.fbAsyncInit = function () {
-  //   FB.init({
-  //     appId: '613416699125829',
-  //     cookie: true,
-  //     xfbml: true,
-  //     version: 'v3.2'
-  //   });
-
-  //   FB.AppEvents.logPageView();
-
-  // };
-
-  // (function (d, s, id) {
-  //   var js, fjs = d.getElementsByTagName(s)[0];
-  //   if (d.getElementById(id)) { return; }
-  //   js = d.createElement(s); js.id = id;
-  //   js.src = "https://connect.facebook.net/en_US/sdk.js";
-  //   fjs.parentNode.insertBefore(js, fjs);
-  // }(document, 'script', 'facebook-jssdk'));
-
-  // FB.getLoginStatus(function (response) {
-  //   statusChangeCallback(response);
-  // });
 };
+
+FB.Event.subscribe('auth.authResponseChange', checkLoginState);
+
+function checkLoginState(event) {
+  console.log('checking Login State');
+  if (event.authResponse) {
+    // User is signed-in Facebook.
+    var unsubscribe = firebase.auth().onAuthStateChanged(function (firebaseUser) {
+      unsubscribe();
+      // Check if we are already signed-in Firebase with the correct user.
+      if (!isUserEqual(event.authResponse, firebaseUser)) {
+        // Build Firebase credential with the Facebook auth token.
+        var credential = firebase.auth.FacebookAuthProvider.credential(
+          event.authResponse.accessToken);
+        // Sign in with the credential from the Facebook user.
+        firebase.auth().signInAndRetrieveDataWithCredential(credential).catch(function (error) {
+          // Handle Errors here.
+          var errorCode = error.code;
+          var errorMessage = error.message;
+          // The email of the user's account used.
+          var email = error.email;
+          // The firebase.auth.AuthCredential type that was used.
+          var credential = error.credential;
+          // ...
+        });
+      } else {
+        // User is already signed-in Firebase with the correct user.
+      }
+    });
+  } else {
+    // User is signed-out of Facebook.
+    firebase.auth().signOut();
+  }
+}
+
+function isUserEqual(facebookAuthResponse, firebaseUser) {
+  if (firebaseUser) {
+    var providerData = firebaseUser.providerData;
+    for (var i = 0; i < providerData.length; i++) {
+      if (providerData[i].providerId === firebase.auth.FacebookAuthProvider.PROVIDER_ID &&
+          providerData[i].uid === facebookAuthResponse.userID) {
+        // We don't need to re-auth the Firebase connection.
+        return true;
+      }
+    }
+  }
+  return false;
+}
