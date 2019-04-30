@@ -26,7 +26,7 @@
             <div class="col-1"></div>
         </div>
     </div>
-    
+
 
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
@@ -51,38 +51,40 @@
         var barPadding = 5;
         var barWidth = (svgWidth / dataset.length);
         var svg = d3.select('svg').attr("width", svgWidth).attr("height", svgHeight).attr("class", "bar-chart");
-        $
-        var barChart = svg.selectAll("rect")
-            .data(dataset)
-            .enter()
-            .append("rect")
-            .attr("y", function (d) {
-                return svgHeight - d
-            })
-            .attr("height", function (d) {
-                return d;
-            })
-            .attr("fill", "#282828")
-            .attr("width", barWidth - barPadding)
-            .attr("transform", function (d, i) {
-                var translate = [barWidth * i, 0];
-                return "translate(" + translate + ")";
-            });
-
+        $(function () {
+            var barChart = svg.selectAll("rect")
+                .data(dataset)
+                .enter()
+                .append("rect")
+                .attr("y", function (d) {
+                    return svgHeight - d
+                })
+                .attr("height", function (d) {
+                    return d;
+                })
+                .attr("fill", "#282828")
+                .attr("width", barWidth - barPadding)
+                .attr("transform", function (d, i) {
+                    var translate = [barWidth * i, 0];
+                    return "translate(" + translate + ")";
+                });
+                debugger;
             var text = svg.selectAll("text")
-            .data(dataset)
-            .enter()
-            .append("text")
-            .text(function(d){
-                return d;
-            })
-            .attr("y", function(d, i){
-                return svgHeight - d -2;
-            })
-            .attr("x", function(d, i){
-                return barWidth + i;
-            })
-            .attr("fill", "white");
+                .data(dataset)
+                .enter()
+                .append("text")
+                .text(function (d) {
+                    return d;
+                })
+                .attr("y", function (d, i) {
+                    return svgHeight - d - 2;
+                })
+                .attr("x", function (d, i) {
+                    return barWidth + i;
+                })
+                .attr("fill", "white");
+
+        })
     </script>
 </body>
 

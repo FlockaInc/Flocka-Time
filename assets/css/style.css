@@ -5,3 +5,12 @@
 #welcomeElement{
     color: white;
 }
+
+.bar-chart {
+    background-color: #299fd6;
+    /* justify-content: space-between; */
+}
+
+rect{
+    color: #767676;
+}
