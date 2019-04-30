@@ -1,7 +1,8 @@
 $(function () {
   var app = {
     authListener: notificationService.addObserver('AUTH_SIGNIN', this, handleSignIn),
-    signOutListener: notificationService.addObserver('AUTH_SIGNOUT', this, handleSignOut)
+    signOutListener: notificationService.addObserver('AUTH_SIGNOUT', this, handleSignOut),
+    getTimeListener: notificationService.addObserver('TIME_FETCHED', this, handleTime),
   }
 
   function handleSignIn() {
@@ -12,6 +13,10 @@ $(function () {
   function handleSignOut() {
     // call methods related to auth sign out
     signInDisplay();
+  }
+
+  function handleTime() {
+    data.calculateTotalTime();
   }
 
   //Displays appropriate sign in/out buttons on display 
@@ -58,10 +63,14 @@ $(function () {
 
   $(".codeTimeStart").on("click", function () {
     data.userStartTime();
+    data.createTimeInstance();
+    data.updateTime("start");
   })
 
   $(".codeTimeStop").on("click", function () {
     data.userStopTime();
+    data.updateTime("stop");
+    data.getTime();
   })
 
   // click submit, append message to message board
@@ -134,5 +143,4 @@ $(function () {
   }
 
   generateDummyChart();
-
 });
