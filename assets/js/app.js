@@ -31,8 +31,6 @@ $(function () {
       (console.log("signed in"));
     } else {
       $(".signInButton").removeClass("hide");
-      $(".signOutButton").addClass("hide");
-      $(".welcomeContainer").addClass("hide");
       console.log("signed out");
     }
   }
