@@ -16,13 +16,15 @@ $(function () {
   }
 
   function handleTime() {
-    data.calculateTotalTime();
+    data.calculateTotalTime(); // This should trigger when display needs to update
   }
 
   //Displays appropriate sign in/out buttons on display 
   function signInDisplay() {
     if (auth.uid) {
       $(".signOutButton").removeClass("hide");
+      $(".codeTimeStop").removeClass("hide");
+      $(".codeTimeStart").removeClass("hide");
       $(".signInButton").addClass("hide");
       $(".welcomeContainer").removeClass("hide");
       $("#welcomeElement").text(" Welcome!");
@@ -89,7 +91,8 @@ $(function () {
   })
 
   $(".signOutButton").on("click", function () {
-    auth.signOut();
+    firebase.auth().signOut();
+    location.reload();
   });
 
 
