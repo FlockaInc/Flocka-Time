@@ -19,16 +19,26 @@ $.ajax({
 })
 
 
-var geoURL = "https://ip-geolocation-ipwhois-io.p.rapidapi.com/json/";
+// var geoURL = "https://ip-geolocation-ipwhois-io.p.rapidapi.com/json/";
+
+// $.ajax({
+//   url: geoURL,
+//   method: "GET",
+//   headers: {"X-RapidAPI-Host" : "ip-geolocation-ipwhois-io.p.rapidapi.type-com",
+//   "X-RapidAPI-Key" : "26e065489amshedaf946a10f08c0p1fb64djsn3860730b77bf"}
+// })
+// .then(function (response) {
+//     console.log(response)
+// })
+
+var geoURL = "https://extreme-ip-lookup.com/json/"
 
 $.ajax({
-  url: geoURL,
-  method: "GET",
-  headers: {"X-RapidAPI-Host" : "ip-geolocation-ipwhois-io.p.rapidapi.type-com",
-  "X-RapidAPI-Key" : "26e065489amshedaf946a10f08c0p1fb64djsn3860730b77bf"}
+url: geoURL,
+method: "GET",
 })
 .then(function (response) {
-    console.log(response)
+  console.log(response)
 })
 
 })
