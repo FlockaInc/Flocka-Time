@@ -58,6 +58,7 @@ var auth = {
     }
     else {
       auth.uid = "";
+      notificationService.postNotification('AUTH_SIGNOUT', null);
     }
   }),
   checkLoginState: function (event) {

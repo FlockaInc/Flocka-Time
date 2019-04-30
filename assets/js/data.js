@@ -44,6 +44,7 @@ var data = {
     var timestamp = moment().format("YYYY-MM-DDTHH:mm:ss");
     var timeObject = {};
 
+<<<<<<< HEAD
     timeObject[action] = timestamp;
 
     database.ref("time/users/" + auth.uid + "/" + this.timeInstance.id + "/").update(timeObject);
@@ -66,4 +67,57 @@ var data = {
     this.totalTime = stop.diff(start, "minutes");
     console.log(stop.diff(start, "seconds"));
   }
+=======
+        timeObject[action] = timestamp;
+        
+        database.ref("time/users/" + auth.uid + "/" + this.timeInstance.id + "/").update(timeObject);
+    },
+    timeObject: {},
+    getTime: function() {
+        firebase.database().ref('time/users/' + auth.uid + "/")
+            .once('value', function (snapshot) {
+                data.timeObject = snapshot.val();
+                
+                // Must use notification service since to trigger synchronous event
+                notificationService.postNotification('TIME_FETCHED', null);
+        });
+    },
+    totalTime: "",
+    calculateTotalTime: function() {
+        var keys = Object.keys(this.timeObject);
+        var i;
+        var j;
+
+        this.totalTime = 0;
+
+        if (keys.length === 1) {
+            if (this.timeObject.keys[0].stop !== undefined) {
+                this.totalTime += this.parseTimestamp(this.timeObject[keys[0]].start, this.timeObject[keys[0]].stop);
+            }
+            else {
+                console.log("null time: " + keys[0]);
+            }
+        }
+        else if (keys.length !== 0) {
+            for (i = 0, j = keys.length; i < j; i++) {
+                if (this.timeObject[keys[i]].stop !== undefined) {
+                    this.totalTime += this.parseTimestamp(this.timeObject[keys[i]].start, this.timeObject[keys[i]].stop);
+                }
+                else {
+                    console.log("null time: " + keys[i]);
+                }
+            }
+        }
+
+        console.log(this.totalTime + " seconds");
+    },
+    parseTimestamp: function(start, stop) {
+        start = moment(start);
+        stop = moment(stop);
+
+        timeDiff = stop.diff(start, "seconds");
+
+        return timeDiff;
+    }
+>>>>>>> 44235b6643d440949b72411e16354b9f851b85de
 }
