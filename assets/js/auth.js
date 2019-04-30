@@ -17,7 +17,7 @@ var auth = {
         var emailObj = { email: userEmail };
 
         // database.ref("users/" + uid + "/").set(emailObj);
-        data.createUser(obj);
+        data.createUser(emailObj);
 
         console.log("User created: " + userId);
         console.log("User created: " + userEmail);
