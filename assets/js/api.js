@@ -20,6 +20,9 @@ method: "GET",
 })
 .then(function (response) {
   console.log(response)
+ var p = $("<p>")
+ p.text("Coding from: " + response.city + ", " + response.region)
+  $(".lead").append(p)
 })
 
 })
