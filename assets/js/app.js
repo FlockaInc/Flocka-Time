@@ -16,7 +16,7 @@ $(function () {
   }
 
   function handleTime() {
-    data.calculateTotalTime();
+    data.calculateTotalTime(); // This should trigger when display needs to update
   }
 
   //Displays appropriate sign in/out buttons on display 
