@@ -41,6 +41,9 @@ var auth = {
         console.log("Error message: " + errorMessage);
       });
   },
+  signOut: function() {
+    firebase.auth().signOut();
+  },
   authListener: firebase.auth().onAuthStateChanged(function (user) {
     if (user) {
       auth.uid = user.uid;
@@ -48,6 +51,7 @@ var auth = {
     }
     else {
       auth.uid = "";
+      notificationService.postNotification('AUTH_SIGNOUT', null);
     }
   }),
 };
