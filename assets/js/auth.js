@@ -21,7 +21,7 @@ var auth = {
         data.createUser(obj);
 
         console.log("User created: " + userId);
-        console.log("User created: " + userEmail);
+        console.log("User created: " + userEmail); 
       })
 
       .catch(function (error) {
