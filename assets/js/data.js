@@ -32,16 +32,16 @@ var data = {
           database.ref("codeTime/users/" + userId + "/stoppedAt").set(firebase.database.ServerValue.TIMESTAMP);
       }
     },
-    timeInstance: "",
-    timeObject: {},
-    totalTime: 0,
-    timeLastWeek: new Array(7).fill(0),
-    createTimeInstance: function() {
+    timeInstance: "", // Id that represents an instance of user tracking their time 
+    timeObject: {}, // Contains all time instances that user has tracked, fetched from Firebase
+    totalTime: 0, // Deprecated
+    timeLastWeek: new Array(7).fill(0), // Array that contains total time for each day, previous 7 days
+    createTimeInstance: function() { // Creates a child on the time node in Firebase, per user
         this.timeInstance = database.ref("time/users/" + auth.uid + "/").push({}).key;
 
         console.log("Current time instance: " + this.timeInstance);
     },
-    updateTime: function(action) {
+    updateTime: function(action) { // Updates the time instance with a start or stop timestamp
         var timestamp = moment().format("YYYY-MM-DDTHH:mm:ss");
         var obj = {};
 
@@ -49,16 +49,15 @@ var data = {
         
         database.ref("time/users/" + auth.uid + "/" + this.timeInstance + "/").update(obj);
     },
-    getTime: function() {
+    getTime: function() { // Fetches all time instances from Firebase
         firebase.database().ref('time/users/' + auth.uid + "/")
             .once('value', function (snapshot) {
                 data.timeObject = snapshot.val();
                 
-                // Must use notification service since to trigger synchronous event
                 notificationService.postNotification('TIME_FETCHED', null);
         });
     },
-    calculateTotalTime: function() {
+    calculateTotalTime: function() { // Calculates total time for the previous week and filters per day
         var keys = Object.keys(this.timeObject);
         var dayIndex = 0;
         var i;
@@ -66,8 +65,8 @@ var data = {
 
         this.totalTime = 0;
 
-        if (keys.length === 1) {
-            if (this.timeObject.keys[0].stop !== undefined) {
+        if (keys.length === 1) { // If only one time instance exists, avoid executing the loop
+            if (this.timeObject.keys[0].stop !== undefined) { // Protect against instance where no start timestamp exists
                 dayIndex = this.determineThisWeek(this.timeObject[keys[0]].start);
 
                 if (dayIndex < 7) {
@@ -87,12 +86,6 @@ var data = {
                     if (dayIndex < 7) {
                         this.timeLastWeek[dayIndex] += this.parseTimestamp(this.timeObject[keys[i]].start, this.timeObject[keys[i]].stop);
                     }
-
-                    console.log(this.timeObject[keys[i]].start)
-                    console.log(this.timeObject[keys[i]].stop)
-                    console.log(dayIndex);
-
-                    console.log(this.timeLastWeek[dayIndex]);
                 }
                 else {
                     console.log("null time: " + keys[i]);
@@ -100,11 +93,11 @@ var data = {
             }
         }
 
-        this.timeLastWeek = this.timeLastWeek.reverse();
+        this.timeLastWeek = this.timeLastWeek.reverse(); // Make array in ascending days order
 
         console.log(this.timeLastWeek + " minutes");
     },
-    parseTimestamp: function(start, stop) {
+    parseTimestamp: function(start, stop) { // Use Moment JS to determine the time between timestamps in minutes
         start = moment(start);
         stop = moment(stop);
 
@@ -112,7 +105,7 @@ var data = {
 
         return timeDiff;
     },
-    determineThisWeek: function(timestamp) {
+    determineThisWeek: function(timestamp) { // Determines how many days ago the time instance was
         var dayDiff = moment().diff(timestamp, "days");
 
         return dayDiff;
