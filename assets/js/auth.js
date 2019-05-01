@@ -10,6 +10,7 @@ var auth = {
 
   signUp: function (email, password) {
     // Call Firebase method to create user with email and password
+<<<<<<< HEAD
     firebase.auth().createUserWithEmailAndPassword(email, password)
 
       .then(function (data) {
@@ -31,6 +32,27 @@ var auth = {
         console.log("Error code: " + errorCode);
         console.log("Error message: " + errorMessage);
       });
+=======
+    firebase.auth().createUserWithEmailAndPassword(email, password).then(function (user) {
+      var userId = user.user.uid;
+      auth.uid = userId;
+      var userEmail = user.user.email;
+      var emailObj = { email: userEmail };
+      console.log(emailObj);
+
+      // data.createUser(emailObj);
+      data.createUser(auth.uid, emailObj);
+
+      console.log("User created: " + userId);
+      console.log("User created: " + userEmail);
+    }).catch(function (error) {
+      var errorCode = error.code;
+      var errorMessage = error.message;
+
+      console.log("Error code: " + errorCode);
+      console.log("Error message: " + errorMessage);
+    });
+>>>>>>> 17295f802af446e84c8a920362bf22b4be6758ab
   },
   signIn: function (email, password) {
     firebase.auth().signInWithEmailAndPassword(email, password)
@@ -43,11 +65,15 @@ var auth = {
       });
   },
   signOut: function () {
+<<<<<<< HEAD
     // check if user is authenticated with facebook/twitter first
     firebase.auth().signOut().then(function () {
       auth.uid = "";
       notificationService.postNotification('AUTH_SIGNOUT', null);
     });
+=======
+    firebase.auth().signOut();
+>>>>>>> 17295f802af446e84c8a920362bf22b4be6758ab
   },
   firebaseAuthListener: firebase.auth().onAuthStateChanged(function (user) {
     console.log('firebase auth listener fired');
