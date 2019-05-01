@@ -172,6 +172,8 @@ var data = {
     return dayDiff;
   },
   convertTime: function (hours) {
+    // takes a floating point value representing hours and converts it to a string
+    // in the format of ### hours ## minutes
     var timeString = '';
 
     var minutes = Math.floor((hours - Math.floor(hours)) * 60);
