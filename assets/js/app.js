@@ -35,7 +35,6 @@ $(function () {
       $(".welcomeContainer").addClass("hide");
       $(".signOutButton").addClass("hide");
     }
-
   }
 
   //runs display function at page load to see if user signed in
@@ -142,7 +141,7 @@ $(function () {
 
   $(".signOutButton").on("click", function () {
     firebase.auth().signOut();
-    // location.reload();
+    location.reload();
   });
 
 
