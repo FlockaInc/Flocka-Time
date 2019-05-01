@@ -98,15 +98,16 @@ var data = {
                 }
             }
         }
+      }
+    }
 
-        // console.log(this.timeObject);
-        console.log(this.timeLastWeek + " seconds");
-    },
-    parseTimestamp: function(start, stop) {
-        start = moment(start);
-        stop = moment(stop);
+    console.log(this.totalTime + " seconds");
+  },
+  parseTimestamp: function (start, stop) {
+    start = moment(start);
+    stop = moment(stop);
 
-        timeDiff = stop.diff(start, "seconds");
+    timeDiff = stop.diff(start, "seconds");
 
         return timeDiff;
     },
