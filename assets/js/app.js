@@ -32,7 +32,10 @@ $(function () {
       (console.log("signed in"));
     } else {
       $(".signInButton").removeClass("hide");
-      console.log("signed out");
+      $(".codeTimeStop").addClass("hide");
+      $(".codeTimeStart").addClass("hide");
+      $(".welcomeContainer").addClass("hide");
+      $(".signOutButton").addClass("hide");
     }
   }
 
@@ -129,7 +132,7 @@ $(function () {
 
   $(".signOutButton").on("click", function () {
     firebase.auth().signOut();
-    location.reload();
+    signInDisplay();
   });
 
   $(".signInButton").on("click", function(){
