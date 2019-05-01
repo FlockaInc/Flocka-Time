@@ -100,6 +100,7 @@ $(function () {
 
             $("#signupEmail").val("");
             $("#signupPassword").val("");
+            $('#sign-in-form').modal('hide');
           }
         })
     }
