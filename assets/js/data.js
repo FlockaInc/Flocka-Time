@@ -65,12 +65,10 @@ var data = {
         var j;
 
         this.totalTime = 0;
-        console.log(this.timeObject);
-        console.log(keys.length)
 
         if (keys.length === 1) {
             if (this.timeObject.keys[0].stop !== undefined) {
-                dayIndex = this.determineThisWeek(this.timeObject[keys[i]].start);
+                dayIndex = this.determineThisWeek(this.timeObject[keys[0]].start);
 
                 if (dayIndex < 7) {
                     this.timeLastWeek[dayIndex] = this.parseTimestamp(this.timeObject[keys[0]].start, this.timeObject[keys[0]].stop);
@@ -87,11 +85,14 @@ var data = {
                     dayIndex = this.determineThisWeek(this.timeObject[keys[i]].start);
 
                     if (dayIndex < 7) {
-                        this.timeLastWeek[dayIndex] += this.parseTimestamp(this.timeObject[keys[0]].start, this.timeObject[keys[0]].stop);
-                        
-                        console.log(this.timeObject[keys[i]].start)
-                        console.log(this.timeObject[keys[i]].stop)
+                        this.timeLastWeek[dayIndex] += this.parseTimestamp(this.timeObject[keys[i]].start, this.timeObject[keys[i]].stop);
                     }
+
+                    console.log(this.timeObject[keys[i]].start)
+                    console.log(this.timeObject[keys[i]].stop)
+                    console.log(dayIndex);
+
+                    console.log(this.timeLastWeek[dayIndex]);
                 }
                 else {
                     console.log("null time: " + keys[i]);
@@ -99,14 +100,15 @@ var data = {
             }
         }
 
-        // console.log(this.timeObject);
-        console.log(this.timeLastWeek + " seconds");
+        this.timeLastWeek = this.timeLastWeek.reverse();
+
+        console.log(this.timeLastWeek + " minutes");
     },
     parseTimestamp: function(start, stop) {
         start = moment(start);
         stop = moment(stop);
 
-        timeDiff = stop.diff(start, "seconds");
+        var timeDiff = stop.diff(start, "minutes");
 
         return timeDiff;
     },
