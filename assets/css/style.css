@@ -5,3 +5,7 @@
 #welcomeElement{
     color: white;
 }
+
+.authSubmit {
+    display: block;
+}
