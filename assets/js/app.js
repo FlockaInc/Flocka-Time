@@ -69,12 +69,19 @@ $(function () {
   });
 
   $(".codeTimeStart").on("click", function () {
-    data.userStartTime();
-    data.createTimeInstance();
-    data.updateTime("start");
+    debugger;
+    var state = $(this).attr("state");
+    if (state === "inactive") {
+      data.userStartTime();
+      data.createTimeInstance();
+      data.updateTime("start");
+      $(this).attr("state", "active");
+      console.log(state); 
+    }
   })
 
   $(".codeTimeStop").on("click", function () {
+    $(".codeTimeStart").attr("data-state", "inactive");
     data.userStopTime();
     data.updateTime("stop");
     data.getTime();
