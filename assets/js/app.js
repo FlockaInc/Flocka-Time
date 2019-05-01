@@ -28,6 +28,7 @@ $(function () {
       $(".signInButton").addClass("hide");
       $(".welcomeContainer").removeClass("hide");
       $("#welcomeElement").text(" Welcome!");
+      $('#sign-in-form').modal('hide');
       (console.log("signed in"));
     } else {
       $(".signInButton").removeClass("hide");
@@ -93,6 +94,7 @@ $(function () {
 
             $("#signupEmail").val("");
             $("#signupPassword").val("");
+            $('#sign-in-form').modal('hide');
           }
         })
     }
@@ -129,6 +131,10 @@ $(function () {
     firebase.auth().signOut();
     location.reload();
   });
+
+  $(".signInButton").on("click", function(){
+    $(".modal-body").show();
+  })
 
 
   // ** CANVAS TEST **
