@@ -19,6 +19,20 @@ $(function () {
     data.calculateTotalTime(); // This should trigger when display needs to update
   }
 
+  data.getFlockalogs().then(allUsers => {
+    for (var user in allUsers) {
+      console.log(allUsers[user]);
+      var tr = $('<tr>');
+      var rank = $('<td>').text('##');
+      var name = $('<td>').text(allUsers[user].username);
+      var hoursCoding = $('<td>').text(allUsers[user].totalTime + ' mins');
+      var dailyAvg = $('<td>').text('##');
+
+      tr.append(rank, name, hoursCoding, dailyAvg);
+      $('#leaderboardTableBody').append(tr);
+    }
+  });
+
   //Displays appropriate sign in/out buttons on display 
   function signInDisplay() {
     if (auth.uid) {
@@ -36,7 +50,6 @@ $(function () {
       $(".welcomeContainer").addClass("hide");
       $(".signOutButton").addClass("hide");
       console.log("signed out");
-
     }
 
   }
