@@ -32,23 +32,23 @@ var data = {
           database.ref("codeTime/users/" + userId + "/stoppedAt").set(firebase.database.ServerValue.TIMESTAMP);
       }
     },
-    timeInstance: {
-        id: ""
-    },
+    timeInstance: "",
+    timeObject: {},
+    totalTime: 0,
+    timeLastWeek: new Array(7).fill(0),
     createTimeInstance: function() {
-        this.timeInstance.id = database.ref("time/users/" + auth.uid + "/").push({}).key;
+        this.timeInstance = database.ref("time/users/" + auth.uid + "/").push({}).key;
 
-        console.log("Current time instance: " + this.timeInstance.id);
+        console.log("Current time instance: " + this.timeInstance);
     },
     updateTime: function(action) {
         var timestamp = moment().format("YYYY-MM-DDTHH:mm:ss");
-        var timeObject = {};
+        var obj = {};
 
-        timeObject[action] = timestamp;
+        obj[action] = timestamp;
         
-        database.ref("time/users/" + auth.uid + "/" + this.timeInstance.id + "/").update(timeObject);
+        database.ref("time/users/" + auth.uid + "/" + this.timeInstance + "/").update(obj);
     },
-    timeObject: {},
     getTime: function() {
         firebase.database().ref('time/users/' + auth.uid + "/")
             .once('value', function (snapshot) {
@@ -58,17 +58,23 @@ var data = {
                 notificationService.postNotification('TIME_FETCHED', null);
         });
     },
-    totalTime: "",
     calculateTotalTime: function() {
         var keys = Object.keys(this.timeObject);
+        var dayIndex = 0;
         var i;
         var j;
 
         this.totalTime = 0;
+        console.log(this.timeObject);
+        console.log(keys.length)
 
         if (keys.length === 1) {
             if (this.timeObject.keys[0].stop !== undefined) {
-                this.totalTime += this.parseTimestamp(this.timeObject[keys[0]].start, this.timeObject[keys[0]].stop);
+                dayIndex = this.determineThisWeek(this.timeObject[keys[i]].start);
+
+                if (dayIndex < 7) {
+                    this.timeLastWeek[dayIndex] = this.parseTimestamp(this.timeObject[keys[0]].start, this.timeObject[keys[0]].stop);
+                }
             }
             else {
                 console.log("null time: " + keys[0]);
@@ -76,8 +82,16 @@ var data = {
         }
         else if (keys.length !== 0) {
             for (i = 0, j = keys.length; i < j; i++) {
+
                 if (this.timeObject[keys[i]].stop !== undefined) {
-                    this.totalTime += this.parseTimestamp(this.timeObject[keys[i]].start, this.timeObject[keys[i]].stop);
+                    dayIndex = this.determineThisWeek(this.timeObject[keys[i]].start);
+
+                    if (dayIndex < 7) {
+                        this.timeLastWeek[dayIndex] += this.parseTimestamp(this.timeObject[keys[0]].start, this.timeObject[keys[0]].stop);
+                        
+                        console.log(this.timeObject[keys[i]].start)
+                        console.log(this.timeObject[keys[i]].stop)
+                    }
                 }
                 else {
                     console.log("null time: " + keys[i]);
@@ -85,7 +99,8 @@ var data = {
             }
         }
 
-        console.log(this.totalTime + " seconds");
+        // console.log(this.timeObject);
+        console.log(this.timeLastWeek + " seconds");
     },
     parseTimestamp: function(start, stop) {
         start = moment(start);
@@ -94,5 +109,10 @@ var data = {
         timeDiff = stop.diff(start, "seconds");
 
         return timeDiff;
+    },
+    determineThisWeek: function(timestamp) {
+        var dayDiff = moment().diff(timestamp, "days");
+
+        return dayDiff;
     }
 }
