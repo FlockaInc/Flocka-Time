@@ -28,6 +28,7 @@ $(function () {
       $(".signInButton").addClass("hide");
       $(".welcomeContainer").removeClass("hide");
       $("#welcomeElement").text(" Welcome!");
+      $('#sign-in-form').modal('hide');
       (console.log("signed in"));
     } else {
       $(".signInButton").removeClass("hide");
