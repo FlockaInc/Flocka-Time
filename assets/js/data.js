@@ -99,7 +99,7 @@ var data = {
 
       // sorts allUsers based on total time value
       console.log(allUsers);
-      allUsers.sort((a, b) => {return (b.totalTime - a.totalTime)});
+      allUsers.sort((a, b) => { return (b.totalTime - a.totalTime) });
       console.log(allUsers);
 
       return allUsers;
@@ -173,11 +173,9 @@ var data = {
   },
   convertTime: function (hours) {
     var timeString = '';
-    var minutes = 0;
-    if (hours > 1) {
-      minutes = Math.floor((hours - Math.floor(hours)) * 60);
-      hours = Math.floor(hours);
-    }
+    
+    var minutes = Math.floor((hours - Math.floor(hours)) * 60);
+    hours = Math.floor(hours);
 
     if (hours !== 0) {
       timeString = hours + ' hrs ';

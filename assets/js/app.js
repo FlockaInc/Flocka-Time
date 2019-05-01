@@ -20,16 +20,19 @@ $(function () {
   }
 
   data.getFlockalogs().then(allUsers => {
+    var count = 1;
     for (var user in allUsers) {
       console.log(allUsers[user]);
       var tr = $('<tr>');
-      var rank = $('<td>').text('##');
+      var rank = $('<td>').text(count);
       var name = $('<td>').text(allUsers[user].username);
-      var hoursCoding = $('<td>').text(allUsers[user].totalTime);
+      var hoursCoding = $('<td>').text(data.convertTime(allUsers[user].totalTime));
       var dailyAvg = $('<td>').text('##');
 
       tr.append(rank, name, hoursCoding, dailyAvg);
       $('#leaderboardTableBody').append(tr);
+
+      count++;
     }
   });
 
