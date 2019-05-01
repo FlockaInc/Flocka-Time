@@ -28,15 +28,12 @@ $(function () {
       $(".signInButton").addClass("hide");
       $(".welcomeContainer").removeClass("hide");
       $("#welcomeElement").text(" Welcome!");
-      (console.log("signed in"));
     } else {
       $(".signInButton").removeClass("hide");
       $(".codeTimeStop").addClass("hide");
       $(".codeTimeStart").addClass("hide");
       $(".welcomeContainer").addClass("hide");
       $(".signOutButton").addClass("hide");
-      console.log("signed out");
-
     }
 
   }
