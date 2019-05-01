@@ -69,22 +69,27 @@ $(function () {
   });
 
   $(".codeTimeStart").on("click", function () {
-    debugger;
+    //Setting state to active/inactive depending on if current instance is running
     var state = $(this).attr("state");
     if (state === "inactive") {
       data.userStartTime();
       data.createTimeInstance();
       data.updateTime("start");
       $(this).attr("state", "active");
-      console.log(state); 
+      $(".codeTimeStop").attr("state", "active");
     }
   })
 
   $(".codeTimeStop").on("click", function () {
-    $(".codeTimeStart").attr("data-state", "inactive");
-    data.userStopTime();
-    data.updateTime("stop");
-    data.getTime();
+    //Setting state to active/inactive depending on if current instance is running
+    var state = $(this).attr("state");
+    if (state === "active") {
+      data.userStopTime();
+      data.updateTime("stop");
+      data.getTime();
+      $(this).attr("state", "inactive");
+      $(".codeTimeStart").attr("state", "inactive");
+    }
   })
 
   // click submit, append message to message board
