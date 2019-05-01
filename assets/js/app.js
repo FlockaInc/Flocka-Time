@@ -33,7 +33,6 @@ $(function () {
       $(".signInButton").removeClass("hide");
       console.log("signed out");
     }
-
   }
 
   //runs display function at page load to see if user signed in
