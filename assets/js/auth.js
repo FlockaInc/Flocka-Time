@@ -18,7 +18,7 @@ var auth = {
         var emailObj = { email: userEmail };
 
         // database.ref("users/" + uid + "/").set(emailObj);
-        data.createUser(obj);
+        data.createUser(emailObj);
 
         console.log("User created: " + userId);
         console.log("User created: " + userEmail); 
@@ -39,7 +39,7 @@ var auth = {
       console.log(emailObj);
 
       // data.createUser(emailObj);
-      data.createUser(auth.uid, emailObj);
+      data.createUser(emailObj);
 
       console.log("User created: " + userId);
       console.log("User created: " + userEmail);
@@ -94,7 +94,10 @@ var auth = {
           var credential = firebase.auth.FacebookAuthProvider.credential(
             event.authResponse.accessToken);
           // Sign in with the credential from the Facebook user.
-          firebase.auth().signInAndRetrieveDataWithCredential(credential).catch(function (error) {
+          firebase.auth().signInAndRetrieveDataWithCredential(credential).then(function(cred) {
+            auth.uid = cred.user.uid;
+            data.createUser({email: cred.user.email});
+          }).catch(function (error) {
             var errorCode = error.code;
             console.log(errorCode);
           });

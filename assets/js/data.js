@@ -9,8 +9,8 @@ var data = {
             });
         }
     },
-    createUser: function (email) {
-        database.ref("users/" + auth.uid + "/").set(email);
+    createUser: function (emailObj) {
+        database.ref("users/" + auth.uid + "/").set(emailObj);
     },
     userStartTime: function () {
         var userId = auth.uid;
