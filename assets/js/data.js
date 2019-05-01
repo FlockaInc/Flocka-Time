@@ -173,7 +173,7 @@ var data = {
   },
   convertTime: function (hours) {
     var timeString = '';
-    
+
     var minutes = Math.floor((hours - Math.floor(hours)) * 60);
     hours = Math.floor(hours);
 
