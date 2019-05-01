@@ -25,7 +25,7 @@ $(function () {
       var tr = $('<tr>');
       var rank = $('<td>').text('##');
       var name = $('<td>').text(allUsers[user].username);
-      var hoursCoding = $('<td>').text(allUsers[user].totalTime + ' mins');
+      var hoursCoding = $('<td>').text(allUsers[user].totalTime);
       var dailyAvg = $('<td>').text('##');
 
       tr.append(rank, name, hoursCoding, dailyAvg);

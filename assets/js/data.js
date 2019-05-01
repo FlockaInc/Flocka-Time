@@ -76,7 +76,7 @@ var data = {
       for (var uid in flockalogs.users) {
         var totalTime = 0;
         var prevTimestamp = 0;
-        var username;
+        var username = '';
 
         for (var user in users) {
           if (uid === user) {
@@ -89,8 +89,6 @@ var data = {
           username: username
         }
 
-        // console.log(userObj);
-
         var user = flockalogs.users[uid];
         for (var pushId in user) {
           var currentTimestamp = user[pushId].timestamp;
@@ -102,8 +100,13 @@ var data = {
             prevTimestamp = currentTimestamp;
           }
         }
-        userObj['totalTime'] = (totalTime / 60000);
-        allUsers.push(userObj);
+
+        // converts ms to hours
+        userObj['totalTime'] = (totalTime / 60000 / 60);
+
+        if (username !== '') {
+          allUsers.push(userObj);
+        }
       }
 
       return allUsers;
