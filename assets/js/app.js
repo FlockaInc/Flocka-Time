@@ -100,6 +100,10 @@ $(function () {
     // location.reload();
   });
 
+  $(".signInButton").on("click", function(){
+    $(".modal-body").show();
+  })
+
 
   // ** CANVAS TEST **
   function generateDummyChart() {
