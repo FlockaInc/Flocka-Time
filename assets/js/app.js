@@ -19,6 +19,7 @@ $(function () {
     data.calculateTotalTime(); // This should trigger when display needs to update
   }
 
+  // Downloads flockalog data and appends each user record to the leaderboard table
   data.getFlockalogs().then(allUsers => {
     var count = 1;
     for (var user in allUsers) {
