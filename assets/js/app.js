@@ -141,7 +141,7 @@ $(function () {
 
   $(".signOutButton").on("click", function () {
     firebase.auth().signOut();
-    location.reload();
+    signInDisplay();
   });
 
 
