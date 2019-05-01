@@ -1,7 +1,7 @@
 // $(function() {
-    /**
- * Variables
- */
+/**
+* Variables
+*/
 
 var database = firebase.database();
 
@@ -9,27 +9,25 @@ var auth = {
   uid: "",
   signUp: function (email, password) {
     // Call Firebase method to create user with email and password
-    firebase.auth().createUserWithEmailAndPassword(email, password)
+    firebase.auth().createUserWithEmailAndPassword(email, password).then(function (user) {
+      var userId = user.user.uid;
+      auth.uid = userId;
+      var userEmail = user.user.email;
+      var emailObj = { email: userEmail };
+      console.log(emailObj);
 
-      .then(function (data) {
-        var userId = data.user.uid;
-        var userEmail = data.user.email;
-        var emailObj = { email: userEmail };
+      // data.createUser(emailObj);
+      data.createUser(auth.uid, emailObj);
 
-        // database.ref("users/" + uid + "/").set(emailObj);
-        data.createUser(obj);
+      console.log("User created: " + userId);
+      console.log("User created: " + userEmail);
+    }).catch(function (error) {
+      var errorCode = error.code;
+      var errorMessage = error.message;
 
-        console.log("User created: " + userId);
-        console.log("User created: " + userEmail);
-      })
-
-      .catch(function (error) {
-        var errorCode = error.code;
-        var errorMessage = error.message;
-
-        console.log("Error code: " + errorCode);
-        console.log("Error message: " + errorMessage);
-      });
+      console.log("Error code: " + errorCode);
+      console.log("Error message: " + errorMessage);
+    });
   },
   signIn: function (email, password) {
     firebase.auth().signInWithEmailAndPassword(email, password)
@@ -41,7 +39,7 @@ var auth = {
         console.log("Error message: " + errorMessage);
       });
   },
-  signOut: function() {
+  signOut: function () {
     firebase.auth().signOut();
   },
   authListener: firebase.auth().onAuthStateChanged(function (user) {
