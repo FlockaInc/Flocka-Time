@@ -43,7 +43,24 @@ $(function () {
 
   //runs display function at page load to see if user signed in
   signInDisplay();
+
+  // api to call ip address of user
+
+  var geoURL = "https://extreme-ip-lookup.com/json/"
+
+  $.ajax({
+    url: geoURL,
+    method: "GET",
+  })
+    .then(function (response) {
+      console.log(response)
+      var p = $("<p>")
+      p.text("Coding from: " + response.city + ", " + response.region)
+      $(".lead").append(p)
+    })
+
   /**
+
    * Sign up button event listener
    */
 
@@ -53,6 +70,7 @@ $(function () {
     var button = $(this).val();
     var email = $("#" + button + "Email").val();
 
+
     if (button === "signin") {
       console.log('Sign in button pressed');
       auth.signIn(email, $("#signinPassword").val());
@@ -60,11 +78,29 @@ $(function () {
       $("#signinEmail").val("");
       $("#signinPassword").val("");
     } else if (button === "signup") {
-      console.log('Sign up button pressed');
-      auth.signUp(email, $("#signupPassword").val());
 
-      $("#signupEmail").val("");
-      $("#signupPassword").val("");
+      var queryURL = 'https://pozzad-email-validator.p.rapidapi.com/emailvalidator/validateEmail/' + email;
+
+      $.ajax({
+        url: queryURL,
+        method: "GET",
+        headers: {
+          "X-RapidAPI-Host": "pozzad-email-validator.p.rapidapi.com",
+          "X-RapidAPI-Key": "26e065489amshedaf946a10f08c0p1fb64djsn3860730b77bf"
+        }
+      })
+        .then(function (response) {
+          console.log(response)
+          console.log(response.isValid)
+
+          if (response.isValid === true) {
+            console.log('Sign up button pressed');
+            auth.signUp(email, $("#signupPassword").val());
+
+            $("#signupEmail").val("");
+            $("#signupPassword").val("");
+          }
+        })
     }
   });
 
@@ -127,33 +163,33 @@ $(function () {
           type: "line",
 
           dataPoints: [{
-              x: new Date(2012, 03, 1),
-              y: 123
-            },
-            {
-              x: new Date(2012, 03, 2),
-              y: 106
-            },
-            {
-              x: new Date(2012, 03, 3),
-              y: 85
-            },
-            {
-              x: new Date(2012, 03, 4),
-              y: 42
-            },
-            {
-              x: new Date(2012, 03, 5),
-              y: 69
-            },
-            {
-              x: new Date(2012, 03, 6),
-              y: 69
-            },
-            {
-              x: new Date(2012, 03, 7),
-              y: 69
-            },
+            x: new Date(2012, 03, 1),
+            y: 123
+          },
+          {
+            x: new Date(2012, 03, 2),
+            y: 106
+          },
+          {
+            x: new Date(2012, 03, 3),
+            y: 85
+          },
+          {
+            x: new Date(2012, 03, 4),
+            y: 42
+          },
+          {
+            x: new Date(2012, 03, 5),
+            y: 69
+          },
+          {
+            x: new Date(2012, 03, 6),
+            y: 69
+          },
+          {
+            x: new Date(2012, 03, 7),
+            y: 69
+          },
           ]
         }]
       });
