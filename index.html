@@ -42,8 +42,8 @@
       </ul>
       <form class="form-inline my-2 my-lg-0">
 
-        <button class="btn btn-secondary my-2 my-sm-0 codeTimeStart hide" type="button">Start</button>
-        <button class="btn btn-secondary my-2 my-sm-0 codeTimeStop hide" type="button">Stop</button>
+        <button class="btn btn-secondary my-2 my-sm-0 codeTimeStart hide" state="active" type="button">Start</button>
+        <button class="btn btn-secondary my-2 my-sm-0 codeTimeStop hide" state="inactive" type="button">Stop</button>
       </form>
       <div class="welcomeContainer hide">
         <br>
@@ -82,7 +82,7 @@
               <th scope="col" id="dailyAverageTableEntry">Daily Average</th>
             </tr>
           </thead>
-          <tbody>
+          <tbody id='leaderboardTableBody'>
       </div>
       <div class="col-md-0 col-lg-1"></div>
     </div>

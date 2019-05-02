@@ -3,6 +3,7 @@ $(function () {
     authListener: notificationService.addObserver('AUTH_SIGNIN', this, handleSignIn),
     signOutListener: notificationService.addObserver('AUTH_SIGNOUT', this, handleSignOut),
     getTimeListener: notificationService.addObserver('TIME_FETCHED', this, handleTime),
+    flockalogListener: notificationService.addObserver('DATA_FLOCKALOGS_DOWNLOADED', this, handleFlockalogDownload),
   }
 
   function handleSignIn() {
@@ -17,6 +18,13 @@ $(function () {
 
   function handleTime() {
     data.calculateTotalTime(); // This should trigger when display needs to update
+  }
+  
+  function handleFlockalogDownload() {
+    // TODO: use this function to get the flockalog data from data.js (using the below functions) and display them on the home page
+    console.log('handling flockalog download');
+    console.table(data.getFlockalogsLeaderboard());
+    console.log(data.getCurrentUserDailyFlockatime());
   }
 
   //Displays appropriate sign in/out buttons on display 
@@ -112,15 +120,27 @@ $(function () {
   });
 
   $(".codeTimeStart").on("click", function () {
-    data.userStartTime();
-    data.createTimeInstance();
-    data.updateTime("start");
+    //Setting state to active/inactive depending on if current instance is running
+    var state = $(this).attr("state");
+    if (state === "active") {
+      data.userStartTime();
+      data.createTimeInstance();
+      data.updateTime("start");
+      $(this).attr("state", "inactive");
+      $(".codeTimeStop").attr("state", "active");
+    }
   })
 
   $(".codeTimeStop").on("click", function () {
-    data.userStopTime();
-    data.updateTime("stop");
-    data.getTime();
+    //Setting state to active/inactive depending on if current instance is running
+    var state = $(this).attr("state");
+    if (state === "active") {
+      data.userStopTime();
+      data.updateTime("stop");
+      data.getTime();
+      $(this).attr("state", "inactive");
+      $(".codeTimeStart").attr("state", "active");
+    }
   })
 
   // click submit, append message to message board
