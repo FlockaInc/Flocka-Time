@@ -1,6 +1,21 @@
 var data = {
   userCodeTime: null,
   allUserFlockalogs: {},
+  flockaflag: false,
+  handleSignin: function() {
+    // check users node if the currently authenticated user uses vscode
+    var uid = auth.uid;
+
+    firebase.database().ref('/users/' + uid).once('value').then(function(userSnapshot) {
+      var user = userSnapshot.val();
+      if (user.flocka !== undefined && user.flocka) {
+        data.flockaflag = true;
+        data.downloadFlockalogs();
+      } else {
+        data.flockaflag = false;
+      }
+    });
+  },
   getUserCodeTime: function () {
     if (auth.uid) {
       firebase.database().ref('/codeTime/users/' + auth.uid).once('value', function (codeTimeSnapshot) {
@@ -56,7 +71,7 @@ var data = {
     let flockalogSnapshot = firebase.database().ref('/flockalogs').once('value');
     let usersSnapshot = firebase.database().ref('/users').once('value');
 
-    console.log('getFlockalogs');
+    console.log('downloadFlockalogs');
     var self = this;
 
     return Promise.all([flockalogSnapshot, usersSnapshot]).then(function (snapshot) {
@@ -65,7 +80,8 @@ var data = {
 
       var allUsers = {};
       for (var uid in flockalogs.users) {
-        allUsers[uid] = [];
+        // allUsers[uid] = [];
+        allUsers[users[uid].email] = [];
         var prevTimestamp = 0;
 
         for (var user in users) {
@@ -82,7 +98,7 @@ var data = {
         for (var pushId in user) {
           var currentTimestamp = user[pushId].timestamp;
           delta = currentTimestamp - prevTimestamp;
-          currentDay = moment(currentTimestamp).format('MM/DD/YYYY');
+          currentDay = moment(currentTimestamp).format('YYYY-MM-DD');
           
           if (prevTimestamp === 0) {
             prevTimestamp = currentTimestamp;
@@ -93,7 +109,8 @@ var data = {
                 time: codeTime,
                 date: prevDay
               };
-              allUsers[uid].push(dailyTime);
+              // allUsers[uid].push(dailyTime);
+              allUsers[users[uid].email].push(dailyTime);
               
               codeTime = 0;
             }
@@ -108,7 +125,8 @@ var data = {
           time: codeTime,
           date: prevDay
         };
-        allUsers[uid].push(dailyTime);
+        // allUsers[uid].push(dailyTime);
+        allUsers[users[uid].email].push(dailyTime);
       }
 
       console.log(allUsers);
@@ -116,6 +134,41 @@ var data = {
       self.allUserFlockalogs = allUsers;
       notificationService.postNotification('DATA_FLOCKALOGS_DOWNLOADED', null);
     });
+  },
+  getFlockalogsLeaderboard: function() {
+    // ms in a day = 86,400,000
+    var keys = Object.keys(this.allUserFlockalogs);
+    var leaderboard = [];
+    // number of days since the unix epoch
+    var today = Math.floor(moment(moment().format('YYYY-MM-DD')).valueOf() / 86400000);
+    console.log('today: ' + today);
+    if (keys.length) {
+      for (var username in this.allUserFlockalogs) {
+        var user = {
+          username: username,
+          dailyAvg: 0,
+          total: 0
+        };
+        var dayCount = 0;
+        var codeTime = 0;
+        for (var dailyTime of this.allUserFlockalogs[username]) {
+          var currentDay = Math.floor(moment(dailyTime.date).valueOf() / 86400000);
+          var daysFromToday = today - currentDay;
+          
+          if (daysFromToday <= 6) {
+            codeTime += dailyTime.time;
+            dayCount ++
+          }
+        }
+        user.total = codeTime / 1000 / 3600;
+        user.dailyAvg = user.total / dayCount;
+        leaderboard.push(user);
+      }
+
+      leaderboard.sort(function(a,b) {return (b.total - a.total)});
+    }
+
+    return leaderboard;
   },
   getTime: function () {
     firebase.database().ref('time/users/' + auth.uid + "/")
@@ -200,5 +253,10 @@ var data = {
     }
 
     return timeString;
+  },
+  numDaysFromToday: function(date) {
+
   }
 }
+
+var authObserver = notificationService.addObserver('AUTH_SIGNIN', this, data.handleSignin);
