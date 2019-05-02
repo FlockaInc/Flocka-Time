@@ -1,5 +1,6 @@
 var data = {
   userCodeTime: null,
+  allUserFlockalogs: {},
   getUserCodeTime: function () {
     if (auth.uid) {
       firebase.database().ref('/codeTime/users/' + auth.uid).once('value', function (codeTimeSnapshot) {
@@ -49,22 +50,23 @@ var data = {
 
     database.ref("time/users/" + auth.uid + "/" + this.timeInstance + "/").update(obj);
   },
-  getFlockalogs: function () {
+  downloadFlockalogs: function () {
+    // download all flockalog data and store in property "allUserFlockalogs" - should be called on page load
     // 15 mins = 900,000 ms
     let flockalogSnapshot = firebase.database().ref('/flockalogs').once('value');
     let usersSnapshot = firebase.database().ref('/users').once('value');
 
     console.log('getFlockalogs');
+    var self = this;
 
-    return Promise.all([flockalogSnapshot, usersSnapshot]).then(function (data) {
-      var flockalogs = data[0].val();
-      var users = data[1].val();
+    return Promise.all([flockalogSnapshot, usersSnapshot]).then(function (snapshot) {
+      var flockalogs = snapshot[0].val();
+      var users = snapshot[1].val();
 
-      var allUsers = [];
+      var allUsers = {};
       for (var uid in flockalogs.users) {
-        var totalTime = 0;
+        allUsers[uid] = [];
         var prevTimestamp = 0;
-        var username = '';
 
         for (var user in users) {
           if (uid === user) {
@@ -72,37 +74,47 @@ var data = {
           }
         }
 
-        var userObj = {
-          uid: uid,
-          username: username
-        }
-
         var user = flockalogs.users[uid];
+        var currentDay = null;
+        var prevDay = null;
+        var codeTime = 0;
+        var delta = 0;
         for (var pushId in user) {
           var currentTimestamp = user[pushId].timestamp;
-          var delta = currentTimestamp - prevTimestamp;
+          delta = currentTimestamp - prevTimestamp;
+          currentDay = moment(currentTimestamp).format('MM/DD/YYYY');
+          
           if (prevTimestamp === 0) {
             prevTimestamp = currentTimestamp;
-          } else if (delta < 900000) {
-            totalTime += delta;
+            prevDay = currentDay;
+          } else {
+            if (currentDay != prevDay) {
+              var dailyTime = {
+                time: codeTime,
+                date: prevDay
+              };
+              allUsers[uid].push(dailyTime);
+              
+              codeTime = 0;
+            }
+  
+            codeTime += delta;
+            prevDay = currentDay;
             prevTimestamp = currentTimestamp;
           }
         }
 
-        // converts ms to hours
-        userObj['totalTime'] = (totalTime / 60000 / 60);
-
-        if (username !== '') {
-          allUsers.push(userObj);
-        }
+        var dailyTime = {
+          time: codeTime,
+          date: prevDay
+        };
+        allUsers[uid].push(dailyTime);
       }
 
-      // sorts allUsers based on total time value
-      console.log(allUsers);
-      allUsers.sort((a, b) => { return (b.totalTime - a.totalTime) });
       console.log(allUsers);
 
-      return allUsers;
+      self.allUserFlockalogs = allUsers;
+      notificationService.postNotification('DATA_FLOCKALOGS_DOWNLOADED', null);
     });
   },
   getTime: function () {
