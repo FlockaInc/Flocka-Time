@@ -14,3 +14,6 @@
 rect{
     color: #767676;
 }
+.authSubmit {
+    display: block;
+}
