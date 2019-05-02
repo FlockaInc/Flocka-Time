@@ -22,19 +22,19 @@
               var translate = [barWidth * i, 0];
               return "translate(" + translate + ")";
           });
-          debugger;
+        //   debugger;
       var text = svg.selectAll("text")
           .data(dataset)
           .enter()
           .append("text")
-          .text(function (d) {
+          .text(function (d, i) {
               return d;
           })
           .attr("y", function (d, i) {
               return svgHeight - d - 2;
           })
           .attr("x", function (d, i) {
-              return barWidth + i;
+              return barWidth * i;
           })
           .attr("fill", "white");
 
