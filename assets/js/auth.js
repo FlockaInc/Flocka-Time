@@ -7,7 +7,7 @@ var database = firebase.database();
 
 var auth = {
   uid: "",
-
+  email: "",
   signUp: function (email, password) {
     // Call Firebase method to create user with email and password
     firebase.auth().createUserWithEmailAndPassword(email, password).then(function (user) {
@@ -51,11 +51,13 @@ var auth = {
     console.log('firebase auth listener fired');
     if (user) {
       auth.uid = user.uid;
+      auth.email = user.email;
       console.log(auth.uid);
       notificationService.postNotification('AUTH_SIGNIN', null);
     }
     else {
       auth.uid = "";
+      auth.email = "";
       notificationService.postNotification('AUTH_SIGNOUT', null);
     }
   }),
