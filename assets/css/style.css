@@ -10,6 +10,6 @@
     display: block;
 }
 
-.errorEmail{
+.errorEmail, .errorEmail1{
     color: red;
 }
