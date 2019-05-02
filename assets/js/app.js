@@ -21,6 +21,7 @@ $(function () {
   }
   
   function handleFlockalogDownload() {
+    // TODO: use this function to get the flockalog data from data.js (using the below functions) and display them on the home page
     console.log('handling flockalog download');
     console.table(data.getFlockalogsLeaderboard());
     console.log(data.getCurrentUserDailyFlockatime());

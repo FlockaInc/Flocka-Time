@@ -114,8 +114,11 @@ var data = {
               
               codeTime = 0;
             }
-  
-            codeTime += delta;
+            
+            if (delta <= 900000) {
+              // if the gap in saves is less than 15 minutes
+              codeTime += delta;
+            }
             prevDay = currentDay;
             prevTimestamp = currentTimestamp;
           }
@@ -172,9 +175,27 @@ var data = {
   },
   getCurrentUserDailyFlockatime: function() {
     // returns the current user's daily code time for the past 7 days
+    // code time reported in hours
     var keys = Object.keys(this.allUserFlockalogs);
     if (keys.length) {
+      var myFlockalogs = this.allUserFlockalogs[auth.email];
+      for (var i = 0; i < myFlockalogs.length; i++) {
+        myFlockalogs[i].time = myFlockalogs[i].time / 1000 / 3600;
+      }
 
+      var lastSevenDaysFlockalogs = [];
+      var today = Math.floor(moment(moment().format('YYYY-MM-DD')).valueOf() / 86400000);
+
+      for (var log of myFlockalogs) {
+        var currentDay = Math.floor(moment(log.date).valueOf() / 86400000);
+        var daysFromToday = today - currentDay;
+
+        if (daysFromToday <= 6) {
+          lastSevenDaysFlockalogs.push(log);
+        }
+      }
+
+      return lastSevenDaysFlockalogs;
     }
   },
   getTime: function () {
