@@ -1,7 +1,7 @@
   //D3 bar graph
-  var dataset = [80, 100, 56, 120, 180, 30, 40, 120, 160];
+  var dataset = [80, 100, 56, 120, 180, 30, 40];
   var svgWidth = 900;
-  var svgHeight = 300;
+  var svgHeight = 250;
   var barPadding = 5;
   var barWidth = (svgWidth / dataset.length);
   var svg = d3.select('svg').attr("width", svgWidth).attr("height", svgHeight).attr("class", "bar-chart");
