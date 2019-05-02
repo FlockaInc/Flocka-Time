@@ -98,8 +98,16 @@ $(function () {
             $("#signupEmail").val("");
             $("#signupPassword").val("");
             $('#sign-in-form').modal('hide');
+
+          } else{
+            var errorEmail = $("<p>");
+            errorEmail.addClass("errorEmail")
+            errorEmail.text("Error: not a valid email address")
+            $("#signupEmailEnter").append(errorEmail);
+            $("#signupEmail").val("");
+            $("#signupPassword").val("");
           }
-        })
+        }) 
     }
   });
 
