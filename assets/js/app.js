@@ -23,7 +23,7 @@ $(function () {
   function handleFlockalogDownload() {
     console.log('handling flockalog download');
     console.table(data.getFlockalogsLeaderboard());
-    console.log(data.getUserFlockaTime());
+    console.log(data.getCurrentUserDailyFlockatime());
   }
 
   //Displays appropriate sign in/out buttons on display 

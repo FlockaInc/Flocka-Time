@@ -170,6 +170,13 @@ var data = {
 
     return leaderboard;
   },
+  getCurrentUserDailyFlockatime: function() {
+    // returns the current user's daily code time for the past 7 days
+    var keys = Object.keys(this.allUserFlockalogs);
+    if (keys.length) {
+
+    }
+  },
   getTime: function () {
     firebase.database().ref('time/users/' + auth.uid + "/")
       .once('value', function (snapshot) {
