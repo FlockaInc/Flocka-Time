@@ -67,7 +67,7 @@ $(function () {
 
     var button = $(this).val();
     var email = $("#" + button + "Email").val();
-
+    var errorEmail = $("<p>");
 
     if (button === "signin") {
       console.log('Sign in button pressed');
@@ -100,7 +100,7 @@ $(function () {
             $('#sign-in-form').modal('hide');
 
           } else{
-            var errorEmail = $("<p>");
+            $(".errorEmail").remove();
             errorEmail.addClass("errorEmail")
             errorEmail.text("Error: not a valid email address")
             $("#signupEmailEnter").append(errorEmail);
