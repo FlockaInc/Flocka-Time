@@ -106,11 +106,11 @@ $(function () {
   $(".codeTimeStart").on("click", function () {
     //Setting state to active/inactive depending on if current instance is running
     var state = $(this).attr("state");
-    if (state === "inactive") {
+    if (state === "active") {
       data.userStartTime();
       data.createTimeInstance();
       data.updateTime("start");
-      $(this).attr("state", "active");
+      $(this).attr("state", "inactive");
       $(".codeTimeStop").attr("state", "active");
     }
   })
@@ -123,7 +123,7 @@ $(function () {
       data.updateTime("stop");
       data.getTime();
       $(this).attr("state", "inactive");
-      $(".codeTimeStart").attr("state", "inactive");
+      $(".codeTimeStart").attr("state", "active");
     }
   })
 
