@@ -9,3 +9,7 @@
 .authSubmit {
     display: block;
 }
+
+.errorEmail{
+    color: red;
+}
