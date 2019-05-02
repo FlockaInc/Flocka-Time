@@ -76,6 +76,7 @@ $(function () {
     var button = $(this).val();
     var email = $("#" + button + "Email").val();
     var errorEmail = $("<p>");
+    var errorEmail1 = $("<p>")
 
     if (button === "signin") {
       console.log('Sign in button pressed');
@@ -99,15 +100,18 @@ $(function () {
           console.log(response)
           console.log(response.isValid)
 
-          if (response.isValid === true) {
+          if ((response.isValid === true) || (auth.uid === false)) {
+            $(".errorEmail1").remove();
             console.log('Sign up button pressed');
             auth.signUp(email, $("#signupPassword").val());
-
+            errorEmail1.addClass("errorEmail1")
+            $("#signupEmailEnter").append(errorEmail1);
+            errorEmail1.text("Error: Invalid input. Try again.")
             $("#signupEmail").val("");
             $("#signupPassword").val("");
-            $('#sign-in-form').modal('hide');
-
-          } else{
+            // $('#sign-in-form').modal('hide');
+          }    
+          else{
             $(".errorEmail").remove();
             errorEmail.addClass("errorEmail")
             errorEmail.text("Error: not a valid email address")
