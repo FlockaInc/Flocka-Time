@@ -1,3 +1,5 @@
+//Dataset array for bar graph
+var dataset = [];
 $(function () {
   var app = {
     authListener: notificationService.addObserver('AUTH_SIGNIN', this, handleSignIn),
@@ -23,21 +25,23 @@ $(function () {
   function handleFlockalogDownload() {
     // TODO: use this function to get the flockalog data from data.js (using the below functions) and display them on the home page
     console.log('handling flockalog download');
-    console.log(data.getCurrentUserDailyFlockatime());
-    var flockaDay = (data.getCurrentUserDailyFlockatime())
-    for (i=0; i<flockaDay.length; i++){
-
-    }
-
     //Pulling data for leaderboard and calling funciton to populate
-    console.table(data.getFlockalogsLeaderboard());
+    // console.table(data.getFlockalogsLeaderboard());
     var flockaTable = data.getFlockalogsLeaderboard();
     for (i = 0; i < flockaTable.length; i++) {
       leaderboardDisplay(i, flockaTable[i].username, flockaTable[i].total, flockaTable[i].dailyAvg);
       console.log(flockaTable[i]);
     }
-    // data.getFlockalogsLeaderboard();
+    // console.log(data.getCurrentUserDailyFlockatime());
+    var flockaDay = (data.getCurrentUserDailyFlockatime())
+    for (i=0; i<flockaDay.length; i++){
+      console.log(flockaDay[i]);
+      dataset.push(flockaDay[i].time);
+      barGraphDisplay(dataset);
+    }
+
   }
+  console.log(dataset);
 
   //Displays appropriate sign in/out buttons on display 
   function signInDisplay() {
@@ -192,8 +196,12 @@ $(function () {
   })
 
 
-  //D3 bar graph for User Code Time Last 7 Days
-  var dataset = [];
+  
+});
+
+//D3 bar graph for User Code Time Last 7 Days
+function barGraphDisplay(){
+  
   var svgWidth = 900;
   var svgHeight = 250;
   var barPadding = 5;
@@ -216,7 +224,7 @@ $(function () {
       var translate = [barWidth * i, 0];
       return "translate(" + translate + ")";
     });
-  //   debugger;
+
   var text = svg.selectAll("text")
     .data(dataset)
     .enter()
@@ -231,7 +239,8 @@ $(function () {
       return barWidth * i;
     })
     .attr("fill", "white");
-});
+  };
+
 
 //Creating Leaderboard Display
 function leaderboardDisplay(rank, userName, total, dailyAverage) {
