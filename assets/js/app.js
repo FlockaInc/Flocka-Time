@@ -31,16 +31,17 @@ $(function () {
       leaderboardDisplay(i, flockaTable[i].username, flockaTable[i].total, flockaTable[i].dailyAvg);
       console.log(flockaTable[i]);
     }
-    // console.log(data.getCurrentUserDailyFlockatime());
+
     var flockaDay = (data.getCurrentUserDailyFlockatime())
     for (i=0; i<flockaDay.length; i++){
       console.log(flockaDay[i]);
-      dataset.push(flockaDay[i].time.toFixed(2));
-      barGraphDisplay(dataset);
+      flockaDayConverted = flockaDay[i].time.toFixed(2);
+      console.log(flockaDayConverted);
+      flockaDataset.push(flockaDayConverted);
     }
+    barGraphDisplay();
 
   }
-  console.log(dataset);
 
   //Displays appropriate sign in/out buttons on display 
   function signInDisplay() {
@@ -197,25 +198,31 @@ $(function () {
 
   
 });
-var dataset = [];
+
 //D3 bar graph for User Code Time Last 7 Days
+var flockaDataset = [];
+console.log(dataset);
 function barGraphDisplay(){
-  
+  var dataset = flockaDataset;
   var svgWidth = 900;
   var svgHeight = 250;
   var barPadding = 5;
   var barWidth = (svgWidth / dataset.length);
   var svg = d3.select('svg').attr("width", svgWidth).attr("height", svgHeight).attr("class", "bar-chart");
 
+  var yScale = d3.scaleLinear()
+    .domain([0, d3.max(dataset)])
+    .range([0, svgHeight]);
+
   var barChart = svg.selectAll("rect")
     .data(dataset)
     .enter()
     .append("rect")
     .attr("y", function (d) {
-      return svgHeight - d
+      return svgHeight - yScale(d);
     })
     .attr("height", function (d) {
-      return d;
+      return yScale(d);
     })
     .attr("fill", "#282828")
     .attr("width", barWidth - barPadding)
@@ -239,7 +246,6 @@ function barGraphDisplay(){
     })
     .attr("fill", "white");
   };
-
 
 //Creating Leaderboard Display
 function leaderboardDisplay(rank, userName, total, dailyAverage) {
