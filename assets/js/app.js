@@ -19,12 +19,15 @@ $(function () {
   function handleTime() {
     data.calculateTotalTime(); // This should trigger when display needs to update
   }
-  
+
   function handleFlockalogDownload() {
     // TODO: use this function to get the flockalog data from data.js (using the below functions) and display them on the home page
     console.log('handling flockalog download');
     console.table(data.getFlockalogsLeaderboard());
     console.log(data.getCurrentUserDailyFlockatime());
+    data.getCurrentUserDailyFlockatime();
+    console.log(lastSevenDaysFlockalogs);
+
   }
 
   //Displays appropriate sign in/out buttons on display 
@@ -55,9 +58,9 @@ $(function () {
   var geoURL = "https://extreme-ip-lookup.com/json/"
 
   $.ajax({
-    url: geoURL,
-    method: "GET",
-  })
+      url: geoURL,
+      method: "GET",
+    })
     .then(function (response) {
       console.log(response)
       var p = $("<p>")
@@ -88,13 +91,13 @@ $(function () {
       var queryURL = 'https://pozzad-email-validator.p.rapidapi.com/emailvalidator/validateEmail/' + email;
 
       $.ajax({
-        url: queryURL,
-        method: "GET",
-        headers: {
-          "X-RapidAPI-Host": "pozzad-email-validator.p.rapidapi.com",
-          "X-RapidAPI-Key": "26e065489amshedaf946a10f08c0p1fb64djsn3860730b77bf"
-        }
-      })
+          url: queryURL,
+          method: "GET",
+          headers: {
+            "X-RapidAPI-Host": "pozzad-email-validator.p.rapidapi.com",
+            "X-RapidAPI-Key": "26e065489amshedaf946a10f08c0p1fb64djsn3860730b77bf"
+          }
+        })
         .then(function (response) {
           console.log(response)
           console.log(response.isValid)
@@ -155,59 +158,50 @@ $(function () {
     signInDisplay();
   });
 
-  $(".signInButton").on("click", function(){
+  $(".signInButton").on("click", function () {
     $(".modal-body").show();
   })
 
 
-  // ** CANVAS TEST **
-  function generateDummyChart() {
-    var date = moment();
-    console.log(date);
-    window.onload = function () {
-      var chart = new CanvasJS.Chart("chartContainer", {
+  //D3 bar graph for User Code Time Last 7 Days
+  console.log(lastSevenDaysFlockalogs);
+  var dataset = [80, 100, 56, 120, 180, 30, 40];
+  var svgWidth = 900;
+  var svgHeight = 250;
+  var barPadding = 5;
+  var barWidth = (svgWidth / dataset.length);
+  var svg = d3.select('svg').attr("width", svgWidth).attr("height", svgHeight).attr("class", "bar-chart");
 
-        title: {
-          text: "Code Time (Last 7 Days)"
-        },
-        data: [{
-          type: "line",
+  var barChart = svg.selectAll("rect")
+    .data(dataset)
+    .enter()
+    .append("rect")
+    .attr("y", function (d) {
+      return svgHeight - d
+    })
+    .attr("height", function (d) {
+      return d;
+    })
+    .attr("fill", "#282828")
+    .attr("width", barWidth - barPadding)
+    .attr("transform", function (d, i) {
+      var translate = [barWidth * i, 0];
+      return "translate(" + translate + ")";
+    });
+  //   debugger;
+  var text = svg.selectAll("text")
+    .data(dataset)
+    .enter()
+    .append("text")
+    .text(function (d, i) {
+      return d;
+    })
+    .attr("y", function (d, i) {
+      return svgHeight - d - 2;
+    })
+    .attr("x", function (d, i) {
+      return barWidth * i;
+    })
+    .attr("fill", "white");
 
-          dataPoints: [{
-            x: new Date(2012, 03, 1),
-            y: 123
-          },
-          {
-            x: new Date(2012, 03, 2),
-            y: 106
-          },
-          {
-            x: new Date(2012, 03, 3),
-            y: 85
-          },
-          {
-            x: new Date(2012, 03, 4),
-            y: 42
-          },
-          {
-            x: new Date(2012, 03, 5),
-            y: 69
-          },
-          {
-            x: new Date(2012, 03, 6),
-            y: 69
-          },
-          {
-            x: new Date(2012, 03, 7),
-            y: 69
-          },
-          ]
-        }]
-      });
-
-      chart.render();
-    }
-  }
-
-  generateDummyChart();
 });

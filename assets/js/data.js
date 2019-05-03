@@ -5,9 +5,11 @@ var data = {
   handleSignin: function() {
     // check users node if the currently authenticated user uses vscode
     var uid = auth.uid;
-
+    console.log(uid);
     firebase.database().ref('/users/' + uid).once('value').then(function(userSnapshot) {
+      
       var user = userSnapshot.val();
+      console.log(user);
       if (user.flocka !== undefined && user.flocka) {
         data.flockaflag = true;
         data.downloadFlockalogs();
@@ -195,6 +197,7 @@ var data = {
         }
       }
 
+      console.log(lastSevenDaysFlockalogs);
       return lastSevenDaysFlockalogs;
     }
   },
@@ -286,5 +289,4 @@ var data = {
 
   }
 }
-
 var authObserver = notificationService.addObserver('AUTH_SIGNIN', this, data.handleSignin);
