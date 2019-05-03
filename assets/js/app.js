@@ -1,5 +1,4 @@
-//Dataset array for bar graph
-var dataset = [];
+
 $(function () {
   var app = {
     authListener: notificationService.addObserver('AUTH_SIGNIN', this, handleSignIn),
@@ -23,27 +22,26 @@ $(function () {
   }
 
   function handleFlockalogDownload() {
-    // TODO: use this function to get the flockalog data from data.js (using the below functions) and display them on the home page
     console.log('handling flockalog download');
-    //Pulling data for leaderboard and calling funciton to populate
+    //Pulling data for leaderboard and calling function to populate data
     // console.table(data.getFlockalogsLeaderboard());
     var flockaTable = data.getFlockalogsLeaderboard();
     for (i = 0; i < flockaTable.length; i++) {
       leaderboardDisplay(i, flockaTable[i].username, flockaTable[i].total, flockaTable[i].dailyAvg);
       console.log(flockaTable[i]);
     }
-    // console.log(data.getCurrentUserDailyFlockatime());
+    //Pulling data for user daily time and calling function to display the bar graph
     var flockaDay = (data.getCurrentUserDailyFlockatime())
     for (i=0; i<flockaDay.length; i++){
       console.log(flockaDay[i]);
-      dataset.push(flockaDay[i].time);
-      barGraphDisplay(dataset);
+      flockaDayConverted = flockaDay[i].time.toFixed(2);
+      console.log(flockaDayConverted);
+      flockaDataset.push(flockaDayConverted);
     }
-
+    barGraphDisplay();
   }
-  console.log(dataset);
 
-  //Displays appropriate sign in/out buttons on display 
+  //Renders appropriate sign in/out buttons on display 
   function signInDisplay() {
     if (auth.uid) {
       $(".signOutButton").removeClass("hide");
@@ -74,7 +72,7 @@ $(function () {
     }
   }
 
-  //runs display function at page load to see if user signed in
+  //Runs display function at page load to see if user signed in
   signInDisplay();
 
   // api to call ip address of user
@@ -97,7 +95,6 @@ $(function () {
 
    * Sign up button event listener
    */
-
   $(authSubmitButton).on("click", function (event) {
     event.preventDefault();
 
@@ -201,23 +198,29 @@ $(function () {
 });
 
 //D3 bar graph for User Code Time Last 7 Days
+var flockaDataset = [];
+console.log(dataset);
 function barGraphDisplay(){
-  
+  var dataset = flockaDataset;
   var svgWidth = 900;
   var svgHeight = 250;
   var barPadding = 5;
   var barWidth = (svgWidth / dataset.length);
   var svg = d3.select('svg').attr("width", svgWidth).attr("height", svgHeight).attr("class", "bar-chart");
 
+  var yScale = d3.scaleLinear()
+    .domain([0, d3.max(dataset)])
+    .range([0, svgHeight]);
+
   var barChart = svg.selectAll("rect")
     .data(dataset)
     .enter()
     .append("rect")
     .attr("y", function (d) {
-      return svgHeight - d
+      return svgHeight - yScale(d);
     })
     .attr("height", function (d) {
-      return d;
+      return yScale(d);
     })
     .attr("fill", "#282828")
     .attr("width", barWidth - barPadding)
@@ -241,7 +244,6 @@ function barGraphDisplay(){
     })
     .attr("fill", "white");
   };
-
 
 //Creating Leaderboard Display
 function leaderboardDisplay(rank, userName, total, dailyAverage) {
