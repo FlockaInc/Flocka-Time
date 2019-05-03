@@ -262,7 +262,14 @@ var data = {
         if (userKeys[i] === timeUserKeys[j]) {
           var timeObject = this.allTime[userKeys[i]];
           var totalTime = this.determineTotalTime(timeObject);
-          var avgTime = totalTime[0] / totalTime[1];
+          var avgTime;
+
+          if (totalTime[1] === 0) {
+            avgTime = 0;
+          }
+          else {
+            avgTime = totalTime[0] / totalTime[1];
+          }
 
           payload.push(
             {
@@ -280,8 +287,11 @@ var data = {
     var dayIndex = 0;
     var i;
     var j;
+    var k;
+    var l;
     var totalTime = 0;
-    var days = 1;
+    var days = 0;
+    var timeArr = new Array(7).fill(0);
 
     if (keys.length === 1) { // If only one time instance exists, avoid executing the loop - this violates DRY, but to avoid scoping issues...
       if (timeObject.keys[0].stop !== undefined) { // Protect against instance where no start timestamp exists
@@ -289,7 +299,8 @@ var data = {
         days = 1;
 
         if (dayIndex < 7) {
-          totalTime += this.parseTimestamp(timeObject[keys[0]].start, timeObject[keys[0]].stop);
+          // totalTime = this.parseTimestamp(timeObject[keys[0]].start, timeObject[keys[0]].stop);
+          timeArr[dayIndex] = this.parseTimestamp(timeObject[keys[0]].start, timeObject[keys[0]].stop);
         }
       }
       else {
@@ -304,12 +315,20 @@ var data = {
           days = 7;
 
           if (dayIndex < 7) {
-            totalTime += this.parseTimestamp(timeObject[keys[i]].start, timeObject[keys[i]].stop);
+            // totalTime += this.parseTimestamp(timeObject[keys[i]].start, timeObject[keys[i]].stop);
+            timeArr[dayIndex] += this.parseTimestamp(timeObject[keys[i]].start, timeObject[keys[i]].stop);
           }
         }
         else {
           console.log("null time: " + keys[i]);
         }
+      }
+    }
+
+    for (k = 0, l = timeArr.length; k < l; k++) {
+      if (timeArr[k] !== 0) {
+        days++;
+        totalTime += timeArr[k];
       }
     }
 
