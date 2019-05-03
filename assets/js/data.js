@@ -234,12 +234,12 @@ var data = {
 
     return timeDiff;
   },
-  determineThisWeek: function(timestamp) { // Determines how many days ago the time instance was
+  determineThisWeek: function (timestamp) { // Determines how many days ago the time instance was
     var dayDiff = moment().diff(timestamp, "days");
 
     return dayDiff;
   },
-  getAllTime: function() {
+  getAllTime: function () {
     firebase.database().ref('time/users/').once('value').then(function (snapshot) {
       data.allTime = snapshot.val();
 
@@ -248,13 +248,30 @@ var data = {
       notificationService.postNotification('ALL_TIME_FETCHED', null);
     });
   },
-  parseAllTime: function() {
-    console.log("every user:");
-    console.log(this.everyUser);
-    console.log("all time:")
-    console.log(this.allTime);
+  parseAllTime: function () {
+    var userKeys = Object.keys(this.everyUser);
+    var timeUserKeys = Object.keys(this.allTime);
+    var i;
+    var j;
+    var k = userKeys.length;
+    var l = timeUserKeys.length;
+    var payload = [];
+
+    for (i = 0; i < k; i++) {
+      for (j = 0; j < l; j++) {
+        if (userKeys[i] === userKeys[j]) {
+          payload.push(
+            {
+              dailyAvg: 0,
+              total: 0,
+              username: this.everyUser[userKeys[i]].email
+            });
+        }
+      }
+    }
+    console.log(payload);
   },
-  buildTableTimeData: function() {
+  buildTableTimeData: function () {
   },
   convertTime: function (hours) {
     // takes a floating point value representing hours and converts it to a string

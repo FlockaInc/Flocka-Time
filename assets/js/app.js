@@ -39,7 +39,7 @@ $(function () {
     var flockaTable = data.getFlockalogsLeaderboard();
     for (i = 0; i < flockaTable.length; i++) {
       leaderboardDisplay(i, flockaTable[i].username, flockaTable[i].total, flockaTable[i].dailyAvg);
-      console.log(flockaTable[i]);
+      // console.log(flockaTable[i]);
     }
     //Pulling data for user daily time and calling function to display the bar graph
     var flockaDay = (data.getCurrentUserDailyFlockatime())
@@ -273,7 +273,7 @@ function leaderboardDisplay(rank, userName, total, dailyAverage) {
   row.append(td2);
   row.append(td3);
   row.append(td4);
-  console.log(name);
+  // console.log(name);
 
   $("#leaderboardTableBody").append(row);
 }
