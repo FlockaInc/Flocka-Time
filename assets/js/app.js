@@ -23,10 +23,16 @@ $(function () {
   function handleFlockalogDownload() {
     // TODO: use this function to get the flockalog data from data.js (using the below functions) and display them on the home page
     console.log('handling flockalog download');
-    console.table(data.getFlockalogsLeaderboard());
     console.log(data.getCurrentUserDailyFlockatime());
+    var flockaDay = (data.getCurrentUserDailyFlockatime())
+    for (i=0; i<flockaDay.length; i++){
+
+    }
+
+    //Pulling data for leaderboard and calling funciton to populate
+    console.table(data.getFlockalogsLeaderboard());
     var flockaTable = data.getFlockalogsLeaderboard();
-    for (i=0; i<flockaTable.length; i++){
+    for (i = 0; i < flockaTable.length; i++) {
       leaderboardDisplay(i, flockaTable[i].username, flockaTable[i].total, flockaTable[i].dailyAvg);
       console.log(flockaTable[i]);
     }
@@ -127,8 +133,7 @@ $(function () {
             $("#signupEmail").val("");
             $("#signupPassword").val("");
             // $('#sign-in-form').modal('hide');
-          }    
-          else{
+          } else {
             $(".errorEmail").remove();
             errorEmail.addClass("errorEmail")
             errorEmail.text("Error: not a valid email address")
@@ -136,7 +141,7 @@ $(function () {
             $("#signupEmail").val("");
             $("#signupPassword").val("");
           }
-        }) 
+        })
     }
   });
 
@@ -188,7 +193,7 @@ $(function () {
 
 
   //D3 bar graph for User Code Time Last 7 Days
-  var dataset = [80, 100, 56, 120, 180, 30, 40];
+  var dataset = [];
   var svgWidth = 900;
   var svgHeight = 250;
   var barPadding = 5;
