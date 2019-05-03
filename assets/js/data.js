@@ -259,7 +259,11 @@ var data = {
 
     for (i = 0; i < k; i++) {
       for (j = 0; j < l; j++) {
-        if (userKeys[i] === userKeys[j]) {
+        if (userKeys[i] === timeUserKeys[j]) {
+          var timeObject = this.allTime[userKeys[i]];
+          // console.log("time obj" + userKeys[i])
+          // console.log(timeObject)
+          // this.parseTimestamp();
           payload.push(
             {
               dailyAvg: 0,
