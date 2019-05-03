@@ -6,7 +6,7 @@
 var database = firebase.database();
 
 var auth = {
-  uid: "",
+  uid: "", 
   email: "",
   signUp: function (email, password) {
     // Call Firebase method to create user with email and password

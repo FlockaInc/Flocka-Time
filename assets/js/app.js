@@ -73,6 +73,7 @@ $(function () {
       console.log(response)
       var p = $("<p>")
       p.text("Coding from: " + response.city + ", " + response.region)
+      p.addClass("text-white")
       $(".lead").append(p)
     })
 
