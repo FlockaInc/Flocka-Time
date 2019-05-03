@@ -2,11 +2,11 @@ var data = {
   userCodeTime: null,
   allUserFlockalogs: {},
   flockaflag: false,
-  handleSignin: function() {
+  handleSignin: function () {
     // check users node if the currently authenticated user uses vscode
     var uid = auth.uid;
 
-    firebase.database().ref('/users/' + uid).once('value').then(function(userSnapshot) {
+    firebase.database().ref('/users/' + uid).once('value').then(function (userSnapshot) {
       var user = userSnapshot.val();
       if (user.flocka !== undefined && user.flocka) {
         data.flockaflag = true;
@@ -19,15 +19,15 @@ var data = {
   createUser: function (email) {
     database.ref("users/" + auth.uid + "/").set(email);
   },
-  timeInstance: "",
-  timeObject: "",
-  timeLastWeek: new Array(7).fill(0),
-  createTimeInstance: function () {
+  timeInstance: "", // Id that represents an instance of user tracking their time 
+  timeObject: {}, // Contains all time instances that user has tracked, fetched from Firebase
+  timeLastWeek: new Array(7).fill(0), // Array that contains total time for each day, previous 7 days
+  createTimeInstance: function () { // Creates a child on the time node in Firebase, per user
     this.timeInstance = database.ref("time/users/" + auth.uid + "/").push({}).key;
 
     console.log("Current time instance: " + this.timeInstance);
   },
-  updateTime: function (action) {
+  updateTime: function (action) { // Updates the time instance with a start or stop timestamp
     var timestamp = moment().format("YYYY-MM-DDTHH:mm:ss");
     var obj = {};
 
@@ -69,7 +69,7 @@ var data = {
           var currentTimestamp = user[pushId].timestamp;
           delta = currentTimestamp - prevTimestamp;
           currentDay = moment(currentTimestamp).format('YYYY-MM-DD');
-          
+
           if (prevTimestamp === 0) {
             prevTimestamp = currentTimestamp;
             prevDay = currentDay;
@@ -81,10 +81,10 @@ var data = {
               };
               // allUsers[uid].push(dailyTime);
               allUsers[users[uid].email].push(dailyTime);
-              
+
               codeTime = 0;
             }
-            
+
             if (delta <= 900000) {
               // if the gap in saves is less than 15 minutes
               codeTime += delta;
@@ -108,7 +108,7 @@ var data = {
       notificationService.postNotification('DATA_FLOCKALOGS_DOWNLOADED', null);
     });
   },
-  getFlockalogsLeaderboard: function() {
+  getFlockalogsLeaderboard: function () {
     // ms in a day = 86,400,000
     var keys = Object.keys(this.allUserFlockalogs);
     var leaderboard = [];
@@ -127,10 +127,10 @@ var data = {
         for (var dailyTime of this.allUserFlockalogs[username]) {
           var currentDay = Math.floor(moment(dailyTime.date).valueOf() / 86400000);
           var daysFromToday = today - currentDay;
-          
+
           if (daysFromToday <= 6) {
             codeTime += dailyTime.time;
-            dayCount ++
+            dayCount++
           }
         }
         user.total = codeTime / 1000 / 3600;
@@ -138,12 +138,12 @@ var data = {
         leaderboard.push(user);
       }
 
-      leaderboard.sort(function(a,b) {return (b.total - a.total)});
+      leaderboard.sort(function (a, b) { return (b.total - a.total) });
     }
 
     return leaderboard;
   },
-  getCurrentUserDailyFlockatime: function() {
+  getCurrentUserDailyFlockatime: function () {
     // returns the current user's daily code time for the past 7 days
     // code time reported in hours
     var keys = Object.keys(this.allUserFlockalogs);
@@ -168,27 +168,23 @@ var data = {
       return lastSevenDaysFlockalogs;
     }
   },
-  getTime: function () {
+  getTime: function () { // Fetches all time instances from Firebase
     firebase.database().ref('time/users/' + auth.uid + "/")
       .once('value', function (snapshot) {
         data.timeObject = snapshot.val();
 
-        // Must use notification service since to trigger synchronous event
         notificationService.postNotification('TIME_FETCHED', null);
       });
   },
-  calculateTotalTime: function () {
+  calculateTotalTime: function () { // Calculates total time for the previous week and filters per day
     var keys = Object.keys(this.timeObject);
     var dayIndex = 0;
     var i;
     var j;
 
-    console.log(this.timeObject);
-    console.log(keys.length)
-
-    if (keys.length === 1) {
-      if (this.timeObject.keys[0].stop !== undefined) {
-        dayIndex = this.determineThisWeek(this.timeObject[keys[i]].start);
+    if (keys.length === 1) { // If only one time instance exists, avoid executing the loop
+      if (this.timeObject.keys[0].stop !== undefined) { // Protect against instance where no start timestamp exists
+        dayIndex = this.determineThisWeek(this.timeObject[keys[0]].start);
 
         if (dayIndex < 7) {
           this.timeLastWeek[dayIndex] = this.parseTimestamp(this.timeObject[keys[0]].start, this.timeObject[keys[0]].stop);
@@ -205,10 +201,7 @@ var data = {
           dayIndex = this.determineThisWeek(this.timeObject[keys[i]].start);
 
           if (dayIndex < 7) {
-            this.timeLastWeek[dayIndex] += this.parseTimestamp(this.timeObject[keys[0]].start, this.timeObject[keys[0]].stop);
-
-            console.log(this.timeObject[keys[i]].start)
-            console.log(this.timeObject[keys[i]].stop)
+            this.timeLastWeek[dayIndex] += this.parseTimestamp(this.timeObject[keys[i]].start, this.timeObject[keys[i]].stop);
           }
         }
         else {
@@ -217,18 +210,19 @@ var data = {
       }
     }
 
-    // console.log(this.timeObject);
-    console.log(this.timeLastWeek + " seconds");
+    this.timeLastWeek = this.timeLastWeek.reverse(); // Make array in ascending days order
+
+    console.log(this.timeLastWeek + " minutes");
   },
-  parseTimestamp: function (start, stop) {
+  parseTimestamp: function (start, stop) { // Use Moment JS to determine the time between timestamps in minutes
     start = moment(start);
     stop = moment(stop);
 
-    timeDiff = stop.diff(start, "seconds");
+    var timeDiff = stop.diff(start, "minutes");
 
     return timeDiff;
   },
-  determineThisWeek: function (timestamp) {
+  determineThisWeek: function(timestamp) { // Determines how many days ago the time instance was
     var dayDiff = moment().diff(timestamp, "days");
 
     return dayDiff;
