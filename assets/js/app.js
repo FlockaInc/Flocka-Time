@@ -22,16 +22,15 @@ $(function () {
   }
 
   function handleFlockalogDownload() {
-    // TODO: use this function to get the flockalog data from data.js (using the below functions) and display them on the home page
     console.log('handling flockalog download');
-    //Pulling data for leaderboard and calling funciton to populate
+    //Pulling data for leaderboard and calling function to populate data
     // console.table(data.getFlockalogsLeaderboard());
     var flockaTable = data.getFlockalogsLeaderboard();
     for (i = 0; i < flockaTable.length; i++) {
       leaderboardDisplay(i, flockaTable[i].username, flockaTable[i].total, flockaTable[i].dailyAvg);
       console.log(flockaTable[i]);
     }
-
+    //Pulling data for user daily time and calling function to display the bar graph
     var flockaDay = (data.getCurrentUserDailyFlockatime())
     for (i=0; i<flockaDay.length; i++){
       console.log(flockaDay[i]);
@@ -40,10 +39,9 @@ $(function () {
       flockaDataset.push(flockaDayConverted);
     }
     barGraphDisplay();
-
   }
 
-  //Displays appropriate sign in/out buttons on display 
+  //Renders appropriate sign in/out buttons on display 
   function signInDisplay() {
     if (auth.uid) {
       $(".signOutButton").removeClass("hide");
@@ -74,7 +72,7 @@ $(function () {
     }
   }
 
-  //runs display function at page load to see if user signed in
+  //Runs display function at page load to see if user signed in
   signInDisplay();
 
   // api to call ip address of user
