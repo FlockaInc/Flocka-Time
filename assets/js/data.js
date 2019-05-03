@@ -16,41 +16,11 @@ var data = {
       }
     });
   },
-  getUserCodeTime: function () {
-    if (auth.uid) {
-      firebase.database().ref('/codeTime/users/' + auth.uid).once('value', function (codeTimeSnapshot) {
-        var codeTime = codeTimeSnapshot.val();
-        data.userCodeTime = codeTime;
-        console.log(codeTime);
-      });
-    }
-  },
   createUser: function (email) {
     database.ref("users/" + auth.uid + "/").set(email);
   },
-  userStartTime: function () {
-    var userId = auth.uid;
-    if (auth.uid) {
-      var sessionsRef = firebase.database().ref("sessions");
-      sessionsRef.push({
-        startedAt: firebase.database.ServerValue.TIMESTAMP
-      });
-      database.ref("codeTime/users/" + userId + "/startedAt").set(firebase.database.ServerValue.TIMESTAMP);
-    }
-  },
-  userStopTime: function () {
-    var userId = auth.uid;
-    if (auth.uid) {
-      var sessionsRef = firebase.database().ref("sessions");
-      sessionsRef.push({
-        stoppedAt: firebase.database.ServerValue.TIMESTAMP
-      });
-      database.ref("codeTime/users/" + userId + "/stoppedAt").set(firebase.database.ServerValue.TIMESTAMP);
-    }
-  },
   timeInstance: "",
-  timeObject: {},
-  totalTime: 0,
+  timeObject: "",
   timeLastWeek: new Array(7).fill(0),
   createTimeInstance: function () {
     this.timeInstance = database.ref("time/users/" + auth.uid + "/").push({}).key;
@@ -213,7 +183,6 @@ var data = {
     var i;
     var j;
 
-    this.totalTime = 0;
     console.log(this.timeObject);
     console.log(keys.length)
 
@@ -281,9 +250,6 @@ var data = {
     }
 
     return timeString;
-  },
-  numDaysFromToday: function(date) {
-
   }
 }
 

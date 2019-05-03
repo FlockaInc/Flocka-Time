@@ -138,7 +138,6 @@ $(function () {
     //Setting state to active/inactive depending on if current instance is running
     var state = $(this).attr("state");
     if (state === "active") {
-      data.userStartTime();
       data.createTimeInstance();
       data.updateTime("start");
       $(this).attr("state", "inactive");
@@ -150,7 +149,6 @@ $(function () {
     //Setting state to active/inactive depending on if current instance is running
     var state = $(this).attr("state");
     if (state === "active") {
-      data.userStopTime();
       data.updateTime("stop");
       data.getTime();
       $(this).attr("state", "inactive");
