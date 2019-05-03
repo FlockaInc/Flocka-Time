@@ -15,10 +15,6 @@ rect{
     color: #767676;
 }
 
-rect:hover{
-    color: white;
-}
-
 .authSubmit {
     display: block;
 }

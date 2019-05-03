@@ -27,6 +27,7 @@ $(function () {
     console.log(data.getCurrentUserDailyFlockatime());
     data.getCurrentUserDailyFlockatime();
     data.getFlockalogsLeaderboard();
+    console.log()
 
   }
 
@@ -204,4 +205,22 @@ $(function () {
     .attr("fill", "white");
 });
 
-//Leaderboard Display
+//Creating Leaderboard Display
+function leaderboardDisplay(userName, total, dailyAverage){
+var td1 = $("<td>");
+td1.text(rank);
+var td2 = $("<td>");
+td2.text(userName);
+var td3 = $("<td>");
+td3.text(total);
+var td4 = $("<td>");
+td3.text(dailyAverage);
+
+var row = $("<tr>");
+row.append(td1);
+row.append(td2);
+row.append(td3);
+console.log(name);
+
+$("#timesheet").append(row);
+}
