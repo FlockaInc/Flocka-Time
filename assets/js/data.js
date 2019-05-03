@@ -19,9 +19,18 @@ var data = {
   createUser: function (email) {
     database.ref("users/" + auth.uid + "/").set(email);
   },
+  everyUser: {}, // Object containing all users and child objects of those users
+  getEveryUser: function () {
+    firebase.database().ref('/users').once('value').then(function (snapshot) {
+      data.everyUser = snapshot.val();
+
+      notificationService.postNotification('USERS_FETCHED', null);
+    });
+  },
   timeInstance: "", // Id that represents an instance of user tracking their time 
   timeObject: {}, // Contains all time instances that user has tracked, fetched from Firebase
   timeLastWeek: new Array(7).fill(0), // Array that contains total time for each day, previous 7 days
+  allTime: {}, // Object containing all time instances and child objects of those instances, by user
   createTimeInstance: function () { // Creates a child on the time node in Firebase, per user
     this.timeInstance = database.ref("time/users/" + auth.uid + "/").push({}).key;
 
@@ -183,7 +192,7 @@ var data = {
     var i;
     var j;
 
-    if (keys.length === 1) { // If only one time instance exists, avoid executing the loop
+    if (keys.length === 1) { // If only one time instance exists, avoid executing the loop - this violates DRY, but to avoid scoping issues...
       if (this.timeObject.keys[0].stop !== undefined) { // Protect against instance where no start timestamp exists
         dayIndex = this.determineThisWeek(this.timeObject[keys[0]].start);
 
@@ -227,6 +236,23 @@ var data = {
     var dayDiff = moment().diff(timestamp, "days");
 
     return dayDiff;
+  },
+  getAllTime: function() {
+    firebase.database().ref('time/users/').once('value').then(function (snapshot) {
+      data.allTime = snapshot.val();
+
+      data.parseAllTime();
+
+      notificationService.postNotification('ALL_TIME_FETCHED', null);
+    });
+  },
+  parseAllTime: function() {
+    console.log("every user:");
+    console.log(this.everyUser);
+    console.log("all time:")
+    console.log(this.allTime);
+  },
+  buildTableTimeData: function() {
   },
   convertTime: function (hours) {
     // takes a floating point value representing hours and converts it to a string

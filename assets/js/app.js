@@ -4,11 +4,22 @@ $(function () {
     signOutListener: notificationService.addObserver('AUTH_SIGNOUT', this, handleSignOut),
     getTimeListener: notificationService.addObserver('TIME_FETCHED', this, handleTime),
     flockalogListener: notificationService.addObserver('DATA_FLOCKALOGS_DOWNLOADED', this, handleFlockalogDownload),
+    getEveryUserListener: notificationService.addObserver('USERS_FETCHED', this, handleEveryUser),
+    getAllTime: notificationService.addObserver('ALL_TIME_FETCHED', this, handleAllTime)
+  }
+
+  function handleEveryUser() {
+    data.getAllTime();
+  }
+
+  function handleAllTime() {
+    console.log(data)
   }
 
   function handleSignIn() {
     console.log('user signed in');
     signInDisplay();
+    data.getEveryUser();
   }
 
   function handleSignOut() {
