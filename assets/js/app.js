@@ -38,12 +38,22 @@ $(function () {
       $("#welcomeElement").text(" Welcome!");
       $('#sign-in-form').modal('hide');
       (console.log("signed in"));
+
+      $(".apiKey").removeClass("hide");
+      $(".apiKey").on("click", function (){
+        var p = $("<p>");
+        p.text(auth.uid);
+        console.log(auth.uid)
+        $("#apiShow").append(p);
+      })
+
     } else {
       $(".signInButton").removeClass("hide");
       $(".codeTimeStop").addClass("hide");
       $(".codeTimeStart").addClass("hide");
       $(".welcomeContainer").addClass("hide");
       $(".signOutButton").addClass("hide");
+      $(".apiKey").addClass("hide");
     }
   }
 
