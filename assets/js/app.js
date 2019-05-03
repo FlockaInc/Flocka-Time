@@ -25,10 +25,12 @@ $(function () {
     console.log('handling flockalog download');
     console.table(data.getFlockalogsLeaderboard());
     console.log(data.getCurrentUserDailyFlockatime());
-    data.getCurrentUserDailyFlockatime();
-    data.getFlockalogsLeaderboard();
-    console.log()
-
+    var flockaTable = data.getFlockalogsLeaderboard();
+    for (i=0; i<flockaTable.length; i++){
+      leaderboardDisplay(i, flockaTable[i].username, flockaTable[i].total, flockaTable[i].dailyAvg);
+      console.log(flockaTable[i]);
+    }
+    // data.getFlockalogsLeaderboard();
   }
 
   //Displays appropriate sign in/out buttons on display 
@@ -44,7 +46,7 @@ $(function () {
       (console.log("signed in"));
 
       $(".apiKey").removeClass("hide");
-      $(".apiKey").on("click", function (){
+      $(".apiKey").on("click", function () {
         $("#apiShow").empty();
         var p = $("<p>");
         p.text(auth.uid);
@@ -217,21 +219,23 @@ $(function () {
 });
 
 //Creating Leaderboard Display
-function leaderboardDisplay(userName, total, dailyAverage){
-var td1 = $("<td>");
-td1.text(rank);
-var td2 = $("<td>");
-td2.text(userName);
-var td3 = $("<td>");
-td3.text(total);
-var td4 = $("<td>");
-td3.text(dailyAverage);
+function leaderboardDisplay(rank, userName, total, dailyAverage) {
+  rank++;
+  var td1 = $("<td>");
+  td1.text(rank);
+  var td2 = $("<td>");
+  td2.text(userName);
+  var td3 = $("<td>");
+  td3.text(data.convertTime(total));
+  var td4 = $("<td>");
+  td4.text(data.convertTime(dailyAverage));
 
-var row = $("<tr>");
-row.append(td1);
-row.append(td2);
-row.append(td3);
-console.log(name);
+  var row = $("<tr>");
+  row.append(td1);
+  row.append(td2);
+  row.append(td3);
+  row.append(td4);
+  console.log(name);
 
-$("#timesheet").append(row);
+  $("#leaderboardTableBody").append(row);
 }
