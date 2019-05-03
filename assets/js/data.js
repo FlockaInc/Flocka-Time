@@ -36,6 +36,7 @@ var data = {
     database.ref("time/users/" + auth.uid + "/" + this.timeInstance + "/").update(obj);
   },
   downloadFlockalogs: function () {
+    this.allUserFlockalogs = {};
     // download all flockalog data and store in property "allUserFlockalogs" - should be called on page load
     // 15 mins = 900,000 ms
     let flockalogSnapshot = firebase.database().ref('/flockalogs').once('value');
