@@ -1,5 +1,4 @@
-//Dataset array for bar graph
-var dataset = [];
+
 $(function () {
   var app = {
     authListener: notificationService.addObserver('AUTH_SIGNIN', this, handleSignIn),
@@ -36,7 +35,7 @@ $(function () {
     var flockaDay = (data.getCurrentUserDailyFlockatime())
     for (i=0; i<flockaDay.length; i++){
       console.log(flockaDay[i]);
-      dataset.push(flockaDay[i].time);
+      dataset.push(flockaDay[i].time.toFixed(2));
       barGraphDisplay(dataset);
     }
 
@@ -97,7 +96,6 @@ $(function () {
 
    * Sign up button event listener
    */
-
   $(authSubmitButton).on("click", function (event) {
     event.preventDefault();
 
@@ -199,7 +197,7 @@ $(function () {
 
   
 });
-
+var dataset = [];
 //D3 bar graph for User Code Time Last 7 Days
 function barGraphDisplay(){
   
