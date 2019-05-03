@@ -230,7 +230,7 @@ var data = {
     start = moment(start);
     stop = moment(stop);
 
-    var timeDiff = stop.diff(start, "minutes");
+    var timeDiff = stop.diff(start, "minutes", true);
 
     return timeDiff;
   },
@@ -261,19 +261,59 @@ var data = {
       for (j = 0; j < l; j++) {
         if (userKeys[i] === timeUserKeys[j]) {
           var timeObject = this.allTime[userKeys[i]];
-          // console.log("time obj" + userKeys[i])
-          // console.log(timeObject)
-          // this.parseTimestamp();
+          var totalTime = this.determineTotalTime(timeObject);
+          var avgTime = totalTime[0] / totalTime[1];
+
           payload.push(
             {
-              dailyAvg: 0,
-              total: 0,
+              dailyAvg: avgTime,
+              total: totalTime[0],
               username: this.everyUser[userKeys[i]].email
             });
         }
       }
     }
     console.log(payload);
+  },
+  determineTotalTime: function (timeObject) { // Calculates total time for the previous week and filters per day
+    var keys = Object.keys(timeObject);
+    var dayIndex = 0;
+    var i;
+    var j;
+    var totalTime = 0;
+    var days = 1;
+
+    if (keys.length === 1) { // If only one time instance exists, avoid executing the loop - this violates DRY, but to avoid scoping issues...
+      if (timeObject.keys[0].stop !== undefined) { // Protect against instance where no start timestamp exists
+        dayIndex = this.determineThisWeek(timeObject[keys[0]].start);
+        days = 1;
+
+        if (dayIndex < 7) {
+          totalTime += this.parseTimestamp(timeObject[keys[0]].start, timeObject[keys[0]].stop);
+        }
+      }
+      else {
+        console.log("null time: " + keys[0]);
+      }
+    }
+    else if (keys.length !== 0) {
+      for (i = 0, j = keys.length; i < j; i++) {
+
+        if (timeObject[keys[i]].stop !== undefined) {
+          dayIndex = this.determineThisWeek(timeObject[keys[i]].start);
+          days = 7;
+
+          if (dayIndex < 7) {
+            totalTime += this.parseTimestamp(timeObject[keys[i]].start, timeObject[keys[i]].stop);
+          }
+        }
+        else {
+          console.log("null time: " + keys[i]);
+        }
+      }
+    }
+
+    return [totalTime, days];
   },
   buildTableTimeData: function () {
   },
