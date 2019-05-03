@@ -41,6 +41,7 @@ $(function () {
 
       $(".apiKey").removeClass("hide");
       $(".apiKey").on("click", function (){
+        $("#apiShow").empty();
         var p = $("<p>");
         p.text(auth.uid);
         console.log(auth.uid)
