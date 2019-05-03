@@ -6,6 +6,15 @@
     color: white;
 }
 
+.bar-chart {
+    background-color: #299fd6;
+    /* justify-content: space-between; */
+}
+
+rect{
+    color: #767676;
+}
+
 .authSubmit {
     display: block;
 }
