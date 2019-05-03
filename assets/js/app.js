@@ -26,7 +26,7 @@ $(function () {
     console.table(data.getFlockalogsLeaderboard());
     console.log(data.getCurrentUserDailyFlockatime());
     data.getCurrentUserDailyFlockatime();
-    console.log(lastSevenDaysFlockalogs);
+    data.getFlockalogsLeaderboard();
 
   }
 
@@ -203,5 +203,6 @@ $(function () {
       return barWidth * i;
     })
     .attr("fill", "white");
-
 });
+
+//Leaderboard Display
