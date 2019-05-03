@@ -164,7 +164,6 @@ $(function () {
 
 
   //D3 bar graph for User Code Time Last 7 Days
-  console.log(lastSevenDaysFlockalogs);
   var dataset = [80, 100, 56, 120, 180, 30, 40];
   var svgWidth = 900;
   var svgHeight = 250;
