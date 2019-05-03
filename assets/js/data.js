@@ -243,6 +243,10 @@ var data = {
       timeString += minutes + ' minutes';
     }
 
+    if (!timeString) {
+      timeString = '0 minutes';
+    }
+
     return timeString;
   }
 }
