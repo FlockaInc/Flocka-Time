@@ -183,9 +183,6 @@ var data = {
     var i;
     var j;
 
-    console.log(this.timeObject);
-    console.log(keys.length)
-
     if (keys.length === 1) {
       if (this.timeObject.keys[0].stop !== undefined) {
         dayIndex = this.determineThisWeek(this.timeObject[keys[i]].start);
@@ -206,9 +203,6 @@ var data = {
 
           if (dayIndex < 7) {
             this.timeLastWeek[dayIndex] += this.parseTimestamp(this.timeObject[keys[0]].start, this.timeObject[keys[0]].stop);
-
-            console.log(this.timeObject[keys[i]].start)
-            console.log(this.timeObject[keys[i]].stop)
           }
         }
         else {
