@@ -52,7 +52,7 @@ $(function () {
     //Pulling data for user daily time and calling function to display the bar graph
     var flockaDay = (data.getCurrentUserDailyFlockatime())
     for (i = 0; i < flockaDay.length; i++) {
-      console.log(flockaDay[i]);
+      console.log(JSON.stringify(flockaDay[i]));
       // flockaDataset.push(flockaDay[i]);
     }
     barGraphDisplay();
@@ -82,7 +82,7 @@ $(function () {
           $("#apiShow").append(p);
           $(this).attr('data-state', 'show');
         } else {
-          $("#apiShow").empty(); 
+          $("#apiShow").empty();
           $(this).attr('data-state', 'hidden');
         }
       });
@@ -174,7 +174,7 @@ $(function () {
             errorEmail.text("Error: not a valid email address")
             $("#signupEmailEnter").append(errorEmail);
             $("#signupEmail").val("");
-            $("#signupPassword").val(""); 
+            $("#signupPassword").val("");
           }
         })
     }
@@ -230,15 +230,7 @@ $(function () {
     $(".modal-body").show();
   })
   //D3 bar graph for User Code Time Last 7 Days
-var flockaDataset = [];
-
-function barGraphDisplay() {
-  // d3.select("#barGraph").select("svg").remove();
-  // var dataset = flockaDataset;
-  // var svgWidth = 900;
-  // var svgHeight = 250;
-
-};
+ 
 });
 
 //Creating Leaderboard Display
