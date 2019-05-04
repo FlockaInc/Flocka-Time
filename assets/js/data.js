@@ -1,5 +1,4 @@
 var data = {
-  userCodeTime: null,
   allUserFlockalogs: {},
   flockaflag: false,
   handleSignin: function () {
@@ -20,19 +19,17 @@ var data = {
   createUser: function (email) {
     database.ref("users/" + auth.uid + "/").set(email);
   },
-  everyUser: {}, // Object containing all users and child objects of those users
-  getEveryUser: function () {
+  usersObject: {}, // Object containing all users and child objects fetched from Firebase
+  getAllUsers: function () {
     firebase.database().ref('/users').once('value').then(function (snapshot) {
-      data.everyUser = snapshot.val();
+      data.usersObject = snapshot.val();
 
       notificationService.postNotification('USERS_FETCHED', null);
     });
   },
   timeInstance: "", // Id that represents an instance of user tracking their time 
-  timeObject: {}, // Contains all time instances that user has tracked, fetched from Firebase
-  timeLastWeek: new Array(7).fill(0), // Array that contains total time for each day, previous 7 days
-  allTime: {}, // Object containing all time instances and child objects of those instances, by user
-  timeLastWeekNew: {},
+  timeObject: {}, // Contains all time instances for a user
+  allTime: {}, // Object containing all time instances and child objects of those instances
   createTimeInstance: function () { // Creates a child on the time node in Firebase, per user
     this.timeInstance = database.ref("time/users/" + auth.uid + "/").push({}).key;
 
@@ -181,22 +178,17 @@ var data = {
       return lastSevenDaysFlockalogs;
     }
   },
-  getTime: function () { // Fetches all time instances from Firebase
-    firebase.database().ref('time/users/' + auth.uid + "/")
-      .once('value', function (snapshot) {
-        data.timeObject = snapshot.val();
-
-        notificationService.postNotification('TIME_FETCHED', null);
-      });
-  },
-  calculateTotalTime: function () { // Calculates total time for the previous week and filters per day
-    var keys = Object.keys(this.timeObject);
-    var lastWeekArray = new Array(7).fill(0);
+  calculatePersonalTime: function () { // Calculates personal time for the previous week and filters per day
+    var prevWeek = new Array(7).fill(0);
     var dayIndex = 0;
-    var dayArray = [];
-    var lastWeek = [];
+
+    var daysOfWeek = this.createWeek();
+    var weekData = [];
+    
+    var keys = Object.keys(this.timeObject);
+
     var i;
-    var j;
+    var j = keys.length;
 
     if (keys.length !== 0) { // If no time instance exists, avoid executing the loop
       for (i = 0, j = keys.length; i < j; i++) {
@@ -205,7 +197,7 @@ var data = {
           dayIndex = this.determineThisWeek(this.timeObject[keys[i]].start);
 
           if (dayIndex < 7) {
-            lastWeekArray[dayIndex] += this.parseTimestamp(this.timeObject[keys[i]].start, this.timeObject[keys[i]].stop);
+            prevWeek[dayIndex] += this.parseTimestamp(this.timeObject[keys[i]].start, this.timeObject[keys[i]].stop);
           }
         }
         else {
@@ -214,22 +206,30 @@ var data = {
       }
     }
 
-    for (i = 0, j = 7; i < j; i++) {
-      dayArray[i] = moment().subtract(i, 'day').format("YYYY-MM-DD");
-    }
+    prevWeek = prevWeek.reverse(); // Make array in ascending days order
 
-    dayArray - dayArray.reverse();
-    lastWeekArray = lastWeekArray.reverse(); // Make array in ascending days order
+    j = daysOfWeek.length;
 
-    for (i = 0, j = dayArray.length; i < j; i++) {
-      lastWeek[i] = {
-        time: lastWeekArray[i],
-        date: dayArray[i]
+    for (i = 0; i < j; i++) {
+      weekData[i] = {
+        time: prevWeek[i],
+        date: daysOfWeek[i]
       }
     }
 
-    console.log(lastWeek);
-    console.log("minutes");
+    return weekData;
+  },
+  createWeek: function () { // Create and return an array of days of the week in the format "YYYY-MM-DD"
+    var week = [];
+    var i;
+    var j;
+
+    for (i = 0, j = 6; i < 7; i++) {
+      week[i] = moment().subtract(j, 'day').format("YYYY-MM-DD");
+      j--;
+    }
+
+    return week;
   },
   parseTimestamp: function (start, stop) { // Use Moment JS to determine the time between timestamps in minutes
     start = moment(start);
@@ -244,27 +244,36 @@ var data = {
 
     return dayDiff;
   },
-  getAllTime: function () {
+  getAllTime: function () { // Fetch time node from Firebase and parse it out for current user
     firebase.database().ref('time/users/').once('value').then(function (snapshot) {
       data.allTime = snapshot.val();
+      data.timeObject = data.allTime[auth.uid];
 
-      data.parseAllTime();
+      var weekDataArray = data.calculatePersonalTime();
+
+      console.log("Week data for display ")
+      console.log(weekDataArray)
+
+      var timeDataArray = data.parseAllTime();
+
+      console.log("Total data for display ")
+      console.log(timeDataArray)
 
       notificationService.postNotification('ALL_TIME_FETCHED', null);
     });
   },
-  parseAllTime: function () {
-    var userKeys = Object.keys(this.everyUser);
+  parseAllTime: function () { // Parse all time object into a format for display to read
+    var userKeys = Object.keys(this.usersObject);
     var timeUserKeys = Object.keys(this.allTime);
     var i;
-    var j;
-    var k = userKeys.length;
+    var j = userKeys.length;
+    var k;
     var l = timeUserKeys.length;
     var payload = [];
 
-    for (i = 0; i < k; i++) {
-      for (j = 0; j < l; j++) {
-        if (userKeys[i] === timeUserKeys[j]) {
+    for (i = 0; i < j; i++) {
+      for (k = 0; k < l; k++) {
+        if (userKeys[i] === timeUserKeys[k]) {
           var timeObject = this.allTime[userKeys[i]];
           var totalTime = this.determineTotalTime(timeObject);
           var avgTime;
@@ -280,47 +289,31 @@ var data = {
             {
               dailyAvg: avgTime,
               total: totalTime[0],
-              username: this.everyUser[userKeys[i]].email
+              username: this.usersObject[userKeys[i]].email
             });
         }
       }
     }
-    console.log(payload);
+
+    return payload;
   },
   determineTotalTime: function (timeObject) { // Calculates total time for the previous week and filters per day
     var keys = Object.keys(timeObject);
     var dayIndex = 0;
     var i;
-    var j;
-    var k;
-    var l;
+    var j = keys.length;
     var totalTime = 0;
     var days = 0;
     var timeArr = new Array(7).fill(0);
 
-    if (keys.length === 1) { // If only one time instance exists, avoid executing the loop - this violates DRY, but to avoid scoping issues...
-      if (timeObject.keys[0].stop !== undefined) { // Protect against instance where no start timestamp exists
-        dayIndex = this.determineThisWeek(timeObject[keys[0]].start);
-        days = 1;
-
-        if (dayIndex < 7) {
-          // totalTime = this.parseTimestamp(timeObject[keys[0]].start, timeObject[keys[0]].stop);
-          timeArr[dayIndex] = this.parseTimestamp(timeObject[keys[0]].start, timeObject[keys[0]].stop);
-        }
-      }
-      else {
-        console.log("null time: " + keys[0]);
-      }
-    }
-    else if (keys.length !== 0) {
-      for (i = 0, j = keys.length; i < j; i++) {
+    if (keys.length !== 0) {
+      for (i = 0; i < j; i++) {
 
         if (timeObject[keys[i]].stop !== undefined) {
           dayIndex = this.determineThisWeek(timeObject[keys[i]].start);
           days = 7;
 
           if (dayIndex < 7) {
-            // totalTime += this.parseTimestamp(timeObject[keys[i]].start, timeObject[keys[i]].stop);
             timeArr[dayIndex] += this.parseTimestamp(timeObject[keys[i]].start, timeObject[keys[i]].stop);
           }
         }
@@ -330,16 +323,16 @@ var data = {
       }
     }
 
-    for (k = 0, l = timeArr.length; k < l; k++) {
-      if (timeArr[k] !== 0) {
+    j = timeArr.length;
+
+    for (i = 0; i < j; i++) {
+      if (timeArr[i] !== 0) {
         days++;
-        totalTime += timeArr[k];
+        totalTime += timeArr[i];
       }
     }
 
     return [totalTime, days];
-  },
-  buildTableTimeData: function () {
   },
   convertTime: function (hours) {
     // takes a floating point value representing hours and converts it to a string
