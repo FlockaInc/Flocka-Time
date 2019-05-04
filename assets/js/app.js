@@ -132,7 +132,7 @@ $(function () {
     var button = $(this).val();
     var email = $("#" + button + "Email").val();
     var errorEmail = $("<p>");
-    var errorEmail1 = $("<p>")
+    var errorEmail1 = $("<p>");
 
     if (button === "signin") {
       console.log('Sign in button pressed');
@@ -196,7 +196,6 @@ $(function () {
     var state = $(this).attr("state");
     if (state === "active") {
       data.updateTime("stop");
-      data.getTime();
 
       $(this).attr("state", "inactive");
       $(".codeTimeStart").attr("state", "active");
@@ -230,10 +229,7 @@ $(function () {
   $(".signInButton").on("click", function () {
     $(".modal-body").show();
   })
-
-});
-
-//D3 bar graph for User Code Time Last 7 Days
+  //D3 bar graph for User Code Time Last 7 Days
 var flockaDataset = [];
 
 function barGraphDisplay() {
@@ -280,6 +276,7 @@ function barGraphDisplay() {
     })
     .attr("fill", "white");
 };
+});
 
 //Creating Leaderboard Display
 function leaderboardDisplay(rank, userName, total, dailyAverage) {
