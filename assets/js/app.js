@@ -32,6 +32,7 @@ $(function () {
   function handleSignIn() {
     console.log('user signed in');
     signInDisplay();
+    data.getAllUsers();
   }
 
   function handleSignOut() {
@@ -72,12 +73,19 @@ $(function () {
 
       $(".apiKey").removeClass("hide");
       $(".apiKey").on("click", function () {
-        $("#apiShow").empty();
-        var p = $("<p>");
-        p.text(auth.uid);
-        console.log(auth.uid)
-        $("#apiShow").append(p);
-      })
+        var state = $(this).attr('data-state');
+        if (state === 'hidden') {
+          $("#apiShow").empty();
+          var p = $("<p>");
+          p.addClass('my-auto').text(auth.uid);
+          // console.log(auth.uid)
+          $("#apiShow").append(p);
+          $(this).attr('data-state', 'show');
+        } else {	
+            $("#apiShow").empty();	
+            $(this).attr('data-state', 'hidden');	
+          }	
+        });
 
     } else {
       $("#leaderboardTableBody").empty();
