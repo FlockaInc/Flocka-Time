@@ -17,7 +17,7 @@ var data = {
     });
   },
   createUser: function (email) {
-    database.ref("users/" + auth.uid + "/").set(email);
+    database.ref("users/" + auth.uid + "/").update(email);
   },
   usersObject: {}, // Object containing all users and child objects fetched from Firebase
   getAllUsers: function () {
