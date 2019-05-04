@@ -233,6 +233,7 @@ $(function () {
 var flockaDataset = [];
 
 function barGraphDisplay() {
+  d3.select("#barGraph").select("svg").remove();
   var dataset = flockaDataset;
   var svgWidth = 900;
   var svgHeight = 250;
