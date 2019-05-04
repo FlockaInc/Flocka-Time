@@ -127,6 +127,7 @@ $(function () {
 
           if ((response.isValid === true) || (auth.uid === false)) {
             $(".errorEmail1").remove();
+            $(".errorEmail").remove();
             console.log('Sign up button pressed');
             auth.signUp(email, $("#signupPassword").val());
             errorEmail1.addClass("errorEmail1")
@@ -136,6 +137,7 @@ $(function () {
             $("#signupPassword").val("");
             // $('#sign-in-form').modal('hide');
           } else {
+            $(".errorEmail1").remove();
             $(".errorEmail").remove();
             errorEmail.addClass("errorEmail")
             errorEmail.text("Error: not a valid email address")
@@ -187,6 +189,7 @@ $(function () {
   $(".signOutButton").on("click", function () {
     firebase.auth().signOut();
     signInDisplay();
+    $("#apiShow").empty();
   });
 
   $(".signInButton").on("click", function () {
