@@ -15,6 +15,13 @@ rect{
     color: #767676;
 }
 
+svg text.label {
+    fill:white;
+    font: 15px;  
+    font-weight: 400;
+    text-anchor: middle;
+  }
+
 .authSubmit {
     display: block;
 }

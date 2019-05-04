@@ -52,8 +52,8 @@ $(function () {
     //Pulling data for user daily time and calling function to display the bar graph
     var flockaDay = (data.getCurrentUserDailyFlockatime())
     for (i = 0; i < flockaDay.length; i++) {
-      flockaDayConverted = flockaDay[i].time.toFixed(2);
-      flockaDataset.push(flockaDayConverted);
+      console.log(flockaDay[i]);
+      // flockaDataset.push(flockaDay[i]);
     }
     barGraphDisplay();
   }
@@ -233,49 +233,11 @@ $(function () {
 var flockaDataset = [];
 
 function barGraphDisplay() {
-  d3.select("#barGraph").select("svg").remove();
-  var dataset = flockaDataset;
-  var svgWidth = 900;
-  var svgHeight = 250;
-  var barPadding = 5;
-  var barWidth = (svgWidth / dataset.length);
-  var svg = d3.select('#barGraph').append("svg").attr("width", svgWidth).attr("height", svgHeight).attr("class", "bar-chart");
+  // d3.select("#barGraph").select("svg").remove();
+  // var dataset = flockaDataset;
+  // var svgWidth = 900;
+  // var svgHeight = 250;
 
-  var yScale = d3.scaleLinear()
-    .domain([0, d3.max(dataset)])
-    .range([0, svgHeight]);
-
-  var barChart = svg.selectAll("rect")
-    .data(dataset)
-    .enter()
-    .append("rect")
-    .attr("y", function (d) {
-      return svgHeight - yScale(d);
-    })
-    .attr("height", function (d) {
-      return yScale(d);
-    })
-    .attr("fill", "#282828")
-    .attr("width", barWidth - barPadding)
-    .attr("transform", function (d, i) {
-      var translate = [barWidth * i, 0];
-      return "translate(" + translate + ")";
-    });
-
-  var text = svg.selectAll("text")
-    .data(dataset)
-    .enter()
-    .append("text")
-    .text(function (d, i) {
-      return d;
-    })
-    .attr("y", function (d, i) {
-      return svgHeight - d - 2;
-    })
-    .attr("x", function (d, i) {
-      return barWidth * i;
-    })
-    .attr("fill", "white");
 };
 });
 
