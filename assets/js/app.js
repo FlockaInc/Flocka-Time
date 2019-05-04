@@ -1,4 +1,3 @@
-
 $(function () {
   var app = {
     authListener: notificationService.addObserver('AUTH_SIGNIN', this, handleSignIn),
@@ -21,7 +20,7 @@ $(function () {
       }
 
       var flockaDay = (data.calculatePersonalTime())
-      
+
       for (i = 0; i < flockaDay.length; i++) {
         flockaDayConverted = flockaDay[i].time.toFixed(2);
         flockaDataset.push(flockaDayConverted);
@@ -69,7 +68,8 @@ $(function () {
       $(".welcomeContainer").removeClass("hide");
       $("#welcomeElement").text(" Welcome!");
       $('#sign-in-form').modal('hide');
-      (console.log("signed in"));
+      $("#graphDiv").removeClass("hide");
+      $("#leaderboardTableBody").empty();
 
       $(".apiKey").removeClass("hide");
       $(".apiKey").on("click", function () {
@@ -78,22 +78,28 @@ $(function () {
           $("#apiShow").empty();
           var p = $("<p>");
           p.addClass('my-auto').text(auth.uid);
-          console.log(auth.uid)
+          // console.log(auth.uid)
           $("#apiShow").append(p);
           $(this).attr('data-state', 'show');
         } else {
-          $("#apiShow").empty();
+          $("#apiShow").empty(); 
           $(this).attr('data-state', 'hidden');
         }
       });
 
     } else {
+      $("#leaderboardTableBody").empty();
       $(".signInButton").removeClass("hide");
       $(".codeTimeStop").addClass("hide");
       $(".codeTimeStart").addClass("hide");
       $(".welcomeContainer").addClass("hide");
       $(".signOutButton").addClass("hide");
       $(".apiKey").addClass("hide");
+
+      var row = $("<tr>");
+      row.text("*** Sign In To Display Leaderboard ***");
+      row.addClass("text-center");
+      $("#leaderboardTableBody").append(row);
     }
   }
 
@@ -105,9 +111,9 @@ $(function () {
   var geoURL = "https://extreme-ip-lookup.com/json/"
 
   $.ajax({
-    url: geoURL,
-    method: "GET",
-  })
+      url: geoURL,
+      method: "GET",
+    })
     .then(function (response) {
       console.log(response)
       var p = $("<p>")
@@ -134,19 +140,18 @@ $(function () {
 
       $("#signinEmail").val("");
       $("#signinPassword").val("");
-
     } else if (button === "signup") {
 
       var queryURL = 'https://pozzad-email-validator.p.rapidapi.com/emailvalidator/validateEmail/' + email;
 
       $.ajax({
-        url: queryURL,
-        method: "GET",
-        headers: {
-          "X-RapidAPI-Host": "pozzad-email-validator.p.rapidapi.com",
-          "X-RapidAPI-Key": "26e065489amshedaf946a10f08c0p1fb64djsn3860730b77bf"
-        }
-      })
+          url: queryURL,
+          method: "GET",
+          headers: {
+            "X-RapidAPI-Host": "pozzad-email-validator.p.rapidapi.com",
+            "X-RapidAPI-Key": "26e065489amshedaf946a10f08c0p1fb64djsn3860730b77bf"
+          }
+        })
         .then(function (response) {
           console.log(response)
           console.log(response.isValid)
@@ -217,25 +222,24 @@ $(function () {
     signInDisplay();
     $("#apiShow").empty();
     $("#leaderboardTableBody").empty();
+    $("#graphDiv").addClass("hide");
+    flockaDataset = [];
   });
 
   $(".signInButton").on("click", function () {
     $(".modal-body").show();
   })
-
-
-
-});
-
-//D3 bar graph for User Code Time Last 7 Days
+  //D3 bar graph for User Code Time Last 7 Days
 var flockaDataset = [];
+
 function barGraphDisplay() {
+  d3.select("#barGraph").select("svg").remove();
   var dataset = flockaDataset;
   var svgWidth = 900;
   var svgHeight = 250;
   var barPadding = 5;
   var barWidth = (svgWidth / dataset.length);
-  var svg = d3.select('svg').attr("width", svgWidth).attr("height", svgHeight).attr("class", "bar-chart");
+  var svg = d3.select('#barGraph').append("svg").attr("width", svgWidth).attr("height", svgHeight).attr("class", "bar-chart");
 
   var yScale = d3.scaleLinear()
     .domain([0, d3.max(dataset)])
@@ -273,6 +277,7 @@ function barGraphDisplay() {
     })
     .attr("fill", "white");
 };
+});
 
 //Creating Leaderboard Display
 function leaderboardDisplay(rank, userName, total, dailyAverage) {
