@@ -165,14 +165,29 @@ var data = {
       var lastSevenDaysFlockalogs = [];
       var today = Math.floor(moment(moment().format('YYYY-MM-DD')).valueOf() / 86400000);
 
-      for (var log of myFlockalogs) {
-        var currentDay = Math.floor(moment(log.date).valueOf() / 86400000);
-        var daysFromToday = today - currentDay;
-
-        if (daysFromToday <= 6) {
-          lastSevenDaysFlockalogs.push(log);
+      for (var i = 6; i >= 0; i--) {
+        var flag = false;
+        for (var log of myFlockalogs) {
+          var currentDay = Math.floor(moment(log.date).valueOf() / 86400000);
+          var daysFromToday = today - currentDay;
+          if (daysFromToday === i) {
+            lastSevenDaysFlockalogs.push(log);
+            flag = true;
+          }
+  
+          // if (daysFromToday <= 6) {
+            // lastSevenDaysFlockalogs.push(log);
+          // }
+        }
+        if (!flag) {
+          var zeroLog = {
+            date: 'test',
+            time: 0
+          };
+          lastSevenDaysFlockalogs.push(zeroLog);
         }
       }
+      
 
       console.log(lastSevenDaysFlockalogs);
       return lastSevenDaysFlockalogs;
