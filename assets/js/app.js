@@ -3,22 +3,23 @@ $(function () {
   var app = {
     authListener: notificationService.addObserver('AUTH_SIGNIN', this, handleSignIn),
     signOutListener: notificationService.addObserver('AUTH_SIGNOUT', this, handleSignOut),
-    getTimeListener: notificationService.addObserver('TIME_FETCHED', this, handleTime),
     flockalogListener: notificationService.addObserver('DATA_FLOCKALOGS_DOWNLOADED', this, handleFlockalogDownload),
+    getAllUsersListener: notificationService.addObserver('USERS_FETCHED', this, handleAllUsers)
+  }
+
+  function handleAllUsers() {
+    data.getAllTime();
   }
 
   function handleSignIn() {
     console.log('user signed in');
     signInDisplay();
+    data.getAllUsers();
   }
 
   function handleSignOut() {
     // call methods related to auth sign out
     signInDisplay();
-  }
-
-  function handleTime() {
-    data.calculateTotalTime(); // This should trigger when display needs to update
   }
 
   function handleFlockalogDownload() {
@@ -28,14 +29,14 @@ $(function () {
     var flockaTable = data.getFlockalogsLeaderboard();
     for (i = 0; i < flockaTable.length; i++) {
       leaderboardDisplay(i, flockaTable[i].username, flockaTable[i].total, flockaTable[i].dailyAvg);
-      console.log(flockaTable[i]);
+      // console.log(flockaTable[i]);
     }
     //Pulling data for user daily time and calling function to display the bar graph
     var flockaDay = (data.getCurrentUserDailyFlockatime())
     for (i=0; i<flockaDay.length; i++){
-      console.log(flockaDay[i]);
+      // console.log(flockaDay[i]);
       flockaDayConverted = flockaDay[i].time.toFixed(2);
-      console.log(flockaDayConverted);
+      // console.log(flockaDayConverted);
       flockaDataset.push(flockaDayConverted);
     }
     barGraphDisplay();
@@ -173,7 +174,7 @@ $(function () {
     var state = $(this).attr("state");
     if (state === "active") {
       data.updateTime("stop");
-      data.getTime();
+      
       $(this).attr("state", "inactive");
       $(".codeTimeStart").attr("state", "active");
     }
@@ -273,7 +274,7 @@ function leaderboardDisplay(rank, userName, total, dailyAverage) {
   row.append(td2);
   row.append(td3);
   row.append(td4);
-  console.log(name);
+  // console.log(name);
 
   $("#leaderboardTableBody").append(row);
 }
