@@ -184,8 +184,14 @@ var data = {
 
     var daysOfWeek = this.createWeek();
     var weekData = [];
+
+    var keys = [];
     
-    var keys = Object.keys(this.timeObject);
+    if ((this.timeObject !== undefined) &&
+        (this.timeObject !== null)) {
+          
+          keys = Object.keys(this.timeObject);
+    }
 
     var i;
     var j = keys.length;
