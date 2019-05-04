@@ -174,7 +174,7 @@ $(function () {
             errorEmail.text("Error: not a valid email address")
             $("#signupEmailEnter").append(errorEmail);
             $("#signupEmail").val("");
-            $("#signupPassword").val("");
+            $("#signupPassword").val(""); 
           }
         })
     }
