@@ -2,7 +2,6 @@ $(function () {
   var app = {
     authListener: notificationService.addObserver('AUTH_SIGNIN', this, handleSignIn),
     signOutListener: notificationService.addObserver('AUTH_SIGNOUT', this, handleSignOut),
-    getTimeListener: notificationService.addObserver('TIME_FETCHED', this, handleTime),
     flockalogListener: notificationService.addObserver('DATA_FLOCKALOGS_DOWNLOADED', this, handleFlockalogDownload),
     getAllUsersListener: notificationService.addObserver('USERS_FETCHED', this, handleAllUsers),
     getAllTimeListener: notificationService.addObserver('ALL_TIME_FETCHED', this, handleAllTime)
@@ -38,10 +37,6 @@ $(function () {
   function handleSignOut() {
     // call methods related to auth sign out
     signInDisplay();
-  }
-
-  function handleTime() {
-    data.calculateTotalTime(); // This should trigger when display needs to update
   }
 
   function handleFlockalogDownload() {
