@@ -34,7 +34,6 @@ $(function () {
       flockaDataset.push(flockaDayConverted);
     }
     barGraphDisplay();
-    console.log("running barGraphDisplay");
   }
 
   //Renders appropriate sign in/out buttons on display 
@@ -48,6 +47,7 @@ $(function () {
       $("#welcomeElement").text(" Welcome!");
       $('#sign-in-form').modal('hide');
       $("#graphDiv").removeClass("hide");
+      $("#leaderboardTableBody").empty();
 
       $(".apiKey").removeClass("hide");
       $(".apiKey").on("click", function () {
@@ -59,13 +59,20 @@ $(function () {
       })
 
     } else {
+      $("#leaderboardTableBody").empty();
       $(".signInButton").removeClass("hide");
       $(".codeTimeStop").addClass("hide");
       $(".codeTimeStart").addClass("hide");
       $(".welcomeContainer").addClass("hide");
       $(".signOutButton").addClass("hide");
       $(".apiKey").addClass("hide");
-      $("#leaderboardTableBody").text("*** Sign In To See Leaderboard ***");
+
+      var td1 = $("<td>");
+      td1.text("*** Sign In To Display Leaderboard ***");
+      var row = $("<tr>");
+    
+      row.addClass("text-center");
+      $("#leaderboardTableBody").append(row);
     }
   }
 
@@ -240,27 +247,24 @@ $(function () {
       })
       .attr("fill", "white");
   };
+
+  //Creating Leaderboard Display
+  function leaderboardDisplay(rank, userName, total, dailyAverage) {
+    rank++;
+    var td1 = $("<td>");
+    td1.text(rank);
+    var td2 = $("<td>");
+    td2.text(userName);
+    var td3 = $("<td>");
+    td3.text(data.convertTime(total));
+    var td4 = $("<td>");
+    td4.text(data.convertTime(dailyAverage));
+
+    var row = $("<tr>");
+    row.append(td1);
+    row.append(td2);
+    row.append(td3);
+    row.append(td4);
+    $("#leaderboardTableBody").append(row);
+  }
 });
-
-
-
-//Creating Leaderboard Display
-function leaderboardDisplay(rank, userName, total, dailyAverage) {
-  // $("#leaderboardTableBody").empty();
-  rank++;
-  var td1 = $("<td>");
-  td1.text(rank);
-  var td2 = $("<td>");
-  td2.text(userName);
-  var td3 = $("<td>");
-  td3.text(data.convertTime(total));
-  var td4 = $("<td>");
-  td4.text(data.convertTime(dailyAverage));
-
-  var row = $("<tr>");
-  row.append(td1);
-  row.append(td2);
-  row.append(td3);
-  row.append(td4);
-  $("#leaderboardTableBody").append(row);
-}
