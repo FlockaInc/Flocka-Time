@@ -101,7 +101,7 @@ $(function () {
     var button = $(this).val();
     var email = $("#" + button + "Email").val();
     var errorEmail = $("<p>");
-    var errorEmail1 = $("<p>")
+    var errorEmail1 = $("<p>");
 
     if (button === "signin") {
       console.log('Sign in button pressed');
@@ -109,6 +109,7 @@ $(function () {
 
       $("#signinEmail").val("");
       $("#signinPassword").val("");
+
     } else if (button === "signup") {
 
       var queryURL = 'https://pozzad-email-validator.p.rapidapi.com/emailvalidator/validateEmail/' + email;
