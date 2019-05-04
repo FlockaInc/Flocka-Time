@@ -82,7 +82,7 @@ $(function () {
           $("#apiShow").append(p);
           $(this).attr('data-state', 'show');
         } else {
-          $("#apiShow").empty();
+          $("#apiShow").empty(); 
           $(this).attr('data-state', 'hidden');
         }
       });
