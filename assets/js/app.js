@@ -55,12 +55,19 @@ $(function () {
 
       $(".apiKey").removeClass("hide");
       $(".apiKey").on("click", function () {
-        $("#apiShow").empty();
-        var p = $("<p>");
-        p.text(auth.uid);
-        console.log(auth.uid)
-        $("#apiShow").append(p);
-      })
+        var state = $(this).attr('data-state');
+        if (state === 'hidden') {
+          $("#apiShow").empty();
+          var p = $("<p>");
+          p.addClass('my-auto').text(auth.uid);
+          console.log(auth.uid)
+          $("#apiShow").append(p);
+          $(this).attr('data-state', 'show');
+        } else {
+          $("#apiShow").empty();
+          $(this).attr('data-state', 'hidden');
+        }
+      });
 
     } else {
       $(".signInButton").removeClass("hide");
@@ -80,9 +87,9 @@ $(function () {
   var geoURL = "https://extreme-ip-lookup.com/json/"
 
   $.ajax({
-      url: geoURL,
-      method: "GET",
-    })
+    url: geoURL,
+    method: "GET",
+  })
     .then(function (response) {
       console.log(response)
       var p = $("<p>")
@@ -115,13 +122,13 @@ $(function () {
       var queryURL = 'https://pozzad-email-validator.p.rapidapi.com/emailvalidator/validateEmail/' + email;
 
       $.ajax({
-          url: queryURL,
-          method: "GET",
-          headers: {
-            "X-RapidAPI-Host": "pozzad-email-validator.p.rapidapi.com",
-            "X-RapidAPI-Key": "26e065489amshedaf946a10f08c0p1fb64djsn3860730b77bf"
-          }
-        })
+        url: queryURL,
+        method: "GET",
+        headers: {
+          "X-RapidAPI-Host": "pozzad-email-validator.p.rapidapi.com",
+          "X-RapidAPI-Key": "26e065489amshedaf946a10f08c0p1fb64djsn3860730b77bf"
+        }
+      })
         .then(function (response) {
           console.log(response)
           console.log(response.isValid)
@@ -203,8 +210,12 @@ $(function () {
 
 //D3 bar graph for User Code Time Last 7 Days
 var flockaDataset = [];
+<<<<<<< HEAD
 console.log(dataset);
 function barGraphDisplay(){
+=======
+function barGraphDisplay() {
+>>>>>>> master
   var dataset = flockaDataset;
   var svgWidth = 900;
   var svgHeight = 250;
