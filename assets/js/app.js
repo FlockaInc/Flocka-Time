@@ -198,6 +198,7 @@ $(function () {
     firebase.auth().signOut();
     signInDisplay();
     $("#apiShow").empty();
+    $("#leaderboardTableBody").empty();
   });
 
   $(".signInButton").on("click", function () {
@@ -210,12 +211,7 @@ $(function () {
 
 //D3 bar graph for User Code Time Last 7 Days
 var flockaDataset = [];
-<<<<<<< HEAD
-console.log(dataset);
-function barGraphDisplay(){
-=======
 function barGraphDisplay() {
->>>>>>> master
   var dataset = flockaDataset;
   var svgWidth = 900;
   var svgHeight = 250;
