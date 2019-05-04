@@ -23,7 +23,6 @@ $(function () {
   function handleFlockalogDownload() {
     console.log('handling flockalog download');
     //Pulling data for leaderboard and calling function to populate data
-    console.table(data.getFlockalogsLeaderboard());
     var flockaTable = data.getFlockalogsLeaderboard();
     for (i = 0; i < flockaTable.length; i++) {
       leaderboardDisplay(i, flockaTable[i].username, flockaTable[i].total, flockaTable[i].dailyAvg);
@@ -35,6 +34,7 @@ $(function () {
       flockaDataset.push(flockaDayConverted);
     }
     barGraphDisplay();
+    console.log("running barGraphDisplay");
   }
 
   //Renders appropriate sign in/out buttons on display 
@@ -47,6 +47,7 @@ $(function () {
       $(".welcomeContainer").removeClass("hide");
       $("#welcomeElement").text(" Welcome!");
       $('#sign-in-form').modal('hide');
+      $("#graphDiv").removeClass("hide");
 
       $(".apiKey").removeClass("hide");
       $(".apiKey").on("click", function () {
@@ -64,6 +65,7 @@ $(function () {
       $(".welcomeContainer").addClass("hide");
       $(".signOutButton").addClass("hide");
       $(".apiKey").addClass("hide");
+      $("#leaderboardTableBody").text("*** Sign In To See Leaderboard ***");
     }
   }
 
@@ -183,60 +185,64 @@ $(function () {
     firebase.auth().signOut();
     signInDisplay();
     $("#leaderboardTableBody").empty();
+    $("#graphDiv").addClass("hide");
+    flockaDataset = [];
   });
 
   $(".signInButton").on("click", function () {
     $(".modal-body").show();
   })
+
+  //D3 bar graph for User Code Time Last 7 Days
+  var flockaDataset = [];
+
+  function barGraphDisplay() {
+    var dataset = flockaDataset;
+    var svgWidth = 900;
+    var svgHeight = 250;
+    var barPadding = 5;
+    var barWidth = (svgWidth / dataset.length);
+    var svg = d3.select('svg').attr("width", svgWidth).attr("height", svgHeight).attr("class", "bar-chart");
+
+    var yScale = d3.scaleLinear()
+      .domain([0, d3.max(dataset)])
+      .range([0, svgHeight]);
+
+    var barChart = svg.selectAll("rect")
+      .data(dataset)
+      .enter()
+      .append("rect")
+      .attr("y", function (d) {
+        return svgHeight - yScale(d);
+      })
+      .attr("height", function (d) {
+        return yScale(d);
+      })
+      .attr("fill", "#282828")
+      .attr("width", barWidth - barPadding)
+      .attr("transform", function (d, i) {
+        var translate = [barWidth * i, 0];
+        return "translate(" + translate + ")";
+      });
+
+    var text = svg.selectAll("text")
+      .data(dataset)
+      .enter()
+      .append("text")
+      .text(function (d, i) {
+        return d;
+      })
+      .attr("y", function (d, i) {
+        return svgHeight - d - 2;
+      })
+      .attr("x", function (d, i) {
+        return barWidth * i;
+      })
+      .attr("fill", "white");
+  };
 });
 
-//D3 bar graph for User Code Time Last 7 Days
-var flockaDataset = [];
 
-function barGraphDisplay() {
-  var dataset = flockaDataset;
-  var svgWidth = 900;
-  var svgHeight = 250;
-  var barPadding = 5;
-  var barWidth = (svgWidth / dataset.length);
-  var svg = d3.select('svg').attr("width", svgWidth).attr("height", svgHeight).attr("class", "bar-chart");
-
-  var yScale = d3.scaleLinear()
-    .domain([0, d3.max(dataset)])
-    .range([0, svgHeight]);
-
-  var barChart = svg.selectAll("rect")
-    .data(dataset)
-    .enter()
-    .append("rect")
-    .attr("y", function (d) {
-      return svgHeight - yScale(d);
-    })
-    .attr("height", function (d) {
-      return yScale(d);
-    })
-    .attr("fill", "#282828")
-    .attr("width", barWidth - barPadding)
-    .attr("transform", function (d, i) {
-      var translate = [barWidth * i, 0];
-      return "translate(" + translate + ")";
-    });
-
-  var text = svg.selectAll("text")
-    .data(dataset)
-    .enter()
-    .append("text")
-    .text(function (d, i) {
-      return d;
-    })
-    .attr("y", function (d, i) {
-      return svgHeight - d - 2;
-    })
-    .attr("x", function (d, i) {
-      return barWidth * i;
-    })
-    .attr("fill", "white");
-};
 
 //Creating Leaderboard Display
 function leaderboardDisplay(rank, userName, total, dailyAverage) {
