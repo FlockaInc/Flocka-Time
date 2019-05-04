@@ -4,6 +4,30 @@ $(function () {
     signOutListener: notificationService.addObserver('AUTH_SIGNOUT', this, handleSignOut),
     getTimeListener: notificationService.addObserver('TIME_FETCHED', this, handleTime),
     flockalogListener: notificationService.addObserver('DATA_FLOCKALOGS_DOWNLOADED', this, handleFlockalogDownload),
+    getAllUsersListener: notificationService.addObserver('USERS_FETCHED', this, handleAllUsers),
+    getAllTimeListener: notificationService.addObserver('ALL_TIME_FETCHED', this, handleAllTime)
+  }
+
+  function handleAllUsers() {
+    data.getAllTime();
+  }
+
+  function handleAllTime() {
+    if (data.flockaflag === false) {
+      var flockaTable = data.parseAllTime();
+
+      for (i = 0; i < flockaTable.length; i++) {
+        leaderboardDisplay(i, flockaTable[i].username, flockaTable[i].total, flockaTable[i].dailyAvg);
+      }
+
+      var flockaDay = (data.calculatePersonalTime())
+      
+      for (i = 0; i < flockaDay.length; i++) {
+        flockaDayConverted = flockaDay[i].time.toFixed(2);
+        flockaDataset.push(flockaDayConverted);
+      }
+      barGraphDisplay();
+    }
   }
 
   function handleSignIn() {
@@ -23,7 +47,9 @@ $(function () {
   function handleFlockalogDownload() {
     console.log('handling flockalog download');
     //Pulling data for leaderboard and calling function to populate data
+
     var flockaTable = data.getFlockalogsLeaderboard();
+
     for (i = 0; i < flockaTable.length; i++) {
       leaderboardDisplay(i, flockaTable[i].username, flockaTable[i].total, flockaTable[i].dailyAvg);
     }
@@ -166,6 +192,7 @@ $(function () {
     if (state === "active") {
       data.updateTime("stop");
       data.getTime();
+
       $(this).attr("state", "inactive");
       $(".codeTimeStart").attr("state", "active");
     }
@@ -246,6 +273,55 @@ $(function () {
       .attr("fill", "white");
   };
 
+});
+
+//D3 bar graph for User Code Time Last 7 Days
+var flockaDataset = [];
+function barGraphDisplay() {
+  var dataset = flockaDataset;
+  var svgWidth = 900;
+  var svgHeight = 250;
+  var barPadding = 5;
+  var barWidth = (svgWidth / dataset.length);
+  var svg = d3.select('svg').attr("width", svgWidth).attr("height", svgHeight).attr("class", "bar-chart");
+
+  var yScale = d3.scaleLinear()
+    .domain([0, d3.max(dataset)])
+    .range([0, svgHeight]);
+
+  var barChart = svg.selectAll("rect")
+    .data(dataset)
+    .enter()
+    .append("rect")
+    .attr("y", function (d) {
+      return svgHeight - yScale(d);
+    })
+    .attr("height", function (d) {
+      return yScale(d);
+    })
+    .attr("fill", "#282828")
+    .attr("width", barWidth - barPadding)
+    .attr("transform", function (d, i) {
+      var translate = [barWidth * i, 0];
+      return "translate(" + translate + ")";
+    });
+
+  var text = svg.selectAll("text")
+    .data(dataset)
+    .enter()
+    .append("text")
+    .text(function (d, i) {
+      return d;
+    })
+    .attr("y", function (d, i) {
+      return svgHeight - d - 2;
+    })
+    .attr("x", function (d, i) {
+      return barWidth * i;
+    })
+    .attr("fill", "white");
+};
+
   //Creating Leaderboard Display
 function leaderboardDisplay(rank, userName, total, dailyAverage) {
   rank++;
@@ -263,7 +339,8 @@ function leaderboardDisplay(rank, userName, total, dailyAverage) {
   row.append(td2);
   row.append(td3);
   row.append(td4);
+
   $("#leaderboardTableBody").append(row);
 }
-});
+
 
