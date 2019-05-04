@@ -20,7 +20,7 @@ $(function () {
       }
 
       var flockaDay = (data.calculatePersonalTime())
-      
+
       for (i = 0; i < flockaDay.length; i++) {
         flockaDayConverted = flockaDay[i].time.toFixed(2);
         flockaDataset.push(flockaDayConverted);
@@ -81,11 +81,11 @@ $(function () {
           // console.log(auth.uid)
           $("#apiShow").append(p);
           $(this).attr('data-state', 'show');
-        } else {	
-            $("#apiShow").empty();	
-            $(this).attr('data-state', 'hidden');	
-          }	
-        });
+        } else {
+          $("#apiShow").empty();
+          $(this).attr('data-state', 'hidden');
+        }
+      });
 
     } else {
       $("#leaderboardTableBody").empty();
@@ -158,6 +158,7 @@ $(function () {
 
           if ((response.isValid === true) || (auth.uid === false)) {
             $(".errorEmail1").remove();
+            $(".errorEmail").remove();
             console.log('Sign up button pressed');
             auth.signUp(email, $("#signupPassword").val());
             errorEmail1.addClass("errorEmail1")
@@ -167,6 +168,7 @@ $(function () {
             $("#signupPassword").val("");
             // $('#sign-in-form').modal('hide');
           } else {
+            $(".errorEmail1").remove();
             $(".errorEmail").remove();
             errorEmail.addClass("errorEmail")
             errorEmail.text("Error: not a valid email address")
@@ -219,6 +221,7 @@ $(function () {
   $(".signOutButton").on("click", function () {
     firebase.auth().signOut();
     signInDisplay();
+    $("#apiShow").empty();
     $("#leaderboardTableBody").empty();
     $("#graphDiv").addClass("hide");
     flockaDataset = [];
@@ -280,6 +283,7 @@ $(function () {
 
 //D3 bar graph for User Code Time Last 7 Days
 var flockaDataset = [];
+
 function barGraphDisplay() {
   var dataset = flockaDataset;
   var svgWidth = 900;
@@ -325,7 +329,7 @@ function barGraphDisplay() {
     .attr("fill", "white");
 };
 
-  //Creating Leaderboard Display
+//Creating Leaderboard Display
 function leaderboardDisplay(rank, userName, total, dailyAverage) {
   rank++;
   var td1 = $("<td>");
@@ -345,5 +349,3 @@ function leaderboardDisplay(rank, userName, total, dailyAverage) {
 
   $("#leaderboardTableBody").append(row);
 }
-
-
