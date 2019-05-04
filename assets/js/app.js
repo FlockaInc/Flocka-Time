@@ -67,10 +67,8 @@ $(function () {
       $(".signOutButton").addClass("hide");
       $(".apiKey").addClass("hide");
 
-      var td1 = $("<td>");
-      td1.text("*** Sign In To Display Leaderboard ***");
       var row = $("<tr>");
-    
+      row.text("*** Sign In To Display Leaderboard ***");
       row.addClass("text-center");
       $("#leaderboardTableBody").append(row);
     }
@@ -249,22 +247,23 @@ $(function () {
   };
 
   //Creating Leaderboard Display
-  function leaderboardDisplay(rank, userName, total, dailyAverage) {
-    rank++;
-    var td1 = $("<td>");
-    td1.text(rank);
-    var td2 = $("<td>");
-    td2.text(userName);
-    var td3 = $("<td>");
-    td3.text(data.convertTime(total));
-    var td4 = $("<td>");
-    td4.text(data.convertTime(dailyAverage));
+function leaderboardDisplay(rank, userName, total, dailyAverage) {
+  rank++;
+  var td1 = $("<td>");
+  td1.text(rank);
+  var td2 = $("<td>");
+  td2.text(userName);
+  var td3 = $("<td>");
+  td3.text(data.convertTime(total));
+  var td4 = $("<td>");
+  td4.text(data.convertTime(dailyAverage));
 
-    var row = $("<tr>");
-    row.append(td1);
-    row.append(td2);
-    row.append(td3);
-    row.append(td4);
-    $("#leaderboardTableBody").append(row);
-  }
+  var row = $("<tr>");
+  row.append(td1);
+  row.append(td2);
+  row.append(td3);
+  row.append(td4);
+  $("#leaderboardTableBody").append(row);
+}
 });
+
