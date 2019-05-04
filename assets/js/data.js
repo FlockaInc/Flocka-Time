@@ -1,5 +1,4 @@
 var data = {
-  userCodeTime: null,
   allUserFlockalogs: {},
   flockaflag: false,
   handleSignin: function () {
@@ -18,11 +17,19 @@ var data = {
     });
   },
   createUser: function (email) {
-    database.ref("users/" + auth.uid + "/").set(email);
+    database.ref("users/" + auth.uid + "/").update(email);
+  },
+  usersObject: {}, // Object containing all users and child objects fetched from Firebase
+  getAllUsers: function () {
+    firebase.database().ref('/users').once('value').then(function (snapshot) {
+      data.usersObject = snapshot.val();
+
+      notificationService.postNotification('USERS_FETCHED', null);
+    });
   },
   timeInstance: "", // Id that represents an instance of user tracking their time 
-  timeObject: {}, // Contains all time instances that user has tracked, fetched from Firebase
-  timeLastWeek: new Array(7).fill(0), // Array that contains total time for each day, previous 7 days
+  timeObject: {}, // Contains all time instances for a user
+  allTime: {}, // Object containing all time instances and child objects of those instances
   createTimeInstance: function () { // Creates a child on the time node in Firebase, per user
     this.timeInstance = database.ref("time/users/" + auth.uid + "/").push({}).key;
 
@@ -171,40 +178,32 @@ var data = {
       return lastSevenDaysFlockalogs;
     }
   },
-  getTime: function () { // Fetches all time instances from Firebase
-    firebase.database().ref('time/users/' + auth.uid + "/")
-      .once('value', function (snapshot) {
-        data.timeObject = snapshot.val();
-
-        notificationService.postNotification('TIME_FETCHED', null);
-      });
-  },
-  calculateTotalTime: function () { // Calculates total time for the previous week and filters per day
-    var keys = Object.keys(this.timeObject);
+  calculatePersonalTime: function () { // Calculates personal time for the previous week and filters per day
+    var prevWeek = new Array(7).fill(0);
     var dayIndex = 0;
-    var i;
-    var j;
 
-    if (keys.length === 1) { // If only one time instance exists, avoid executing the loop
-      if (this.timeObject.keys[0].stop !== undefined) { // Protect against instance where no start timestamp exists
-        dayIndex = this.determineThisWeek(this.timeObject[keys[0]].start);
+    var daysOfWeek = this.createWeek();
+    var weekData = [];
 
-        if (dayIndex < 7) {
-          this.timeLastWeek[dayIndex] = this.parseTimestamp(this.timeObject[keys[0]].start, this.timeObject[keys[0]].stop);
-        }
-      }
-      else {
-        console.log("null time: " + keys[0]);
-      }
+    var keys = [];
+    
+    if ((this.timeObject !== undefined) &&
+        (this.timeObject !== null)) {
+          
+          keys = Object.keys(this.timeObject);
     }
-    else if (keys.length !== 0) {
+
+    var i;
+    var j = keys.length;
+
+    if (keys.length !== 0) { // If no time instance exists, avoid executing the loop
       for (i = 0, j = keys.length; i < j; i++) {
 
-        if (this.timeObject[keys[i]].stop !== undefined) {
+        if (this.timeObject[keys[i]].stop !== undefined) { // Protect against instance where no start timestamp exists
           dayIndex = this.determineThisWeek(this.timeObject[keys[i]].start);
 
           if (dayIndex < 7) {
-            this.timeLastWeek[dayIndex] += this.parseTimestamp(this.timeObject[keys[i]].start, this.timeObject[keys[i]].stop);
+            prevWeek[dayIndex] += this.parseTimestamp(this.timeObject[keys[i]].start, this.timeObject[keys[i]].stop);
           }
         }
         else {
@@ -213,22 +212,133 @@ var data = {
       }
     }
 
-    this.timeLastWeek = this.timeLastWeek.reverse(); // Make array in ascending days order
+    prevWeek = prevWeek.reverse(); // Make array in ascending days order
 
-    console.log(this.timeLastWeek + " minutes");
+    j = daysOfWeek.length;
+
+    for (i = 0; i < j; i++) {
+      weekData[i] = {
+        time: prevWeek[i],
+        date: daysOfWeek[i]
+      }
+    }
+
+    return weekData;
+  },
+  createWeek: function () { // Create and return an array of days of the week in the format "YYYY-MM-DD"
+    var week = [];
+    var i;
+    var j;
+
+    for (i = 0, j = 6; i < 7; i++) {
+      week[i] = moment().subtract(j, 'day').format("YYYY-MM-DD");
+      j--;
+    }
+
+    return week;
   },
   parseTimestamp: function (start, stop) { // Use Moment JS to determine the time between timestamps in minutes
     start = moment(start);
     stop = moment(stop);
 
-    var timeDiff = stop.diff(start, "minutes");
+    var timeDiff = stop.diff(start, "minutes", true);
 
     return timeDiff;
   },
-  determineThisWeek: function(timestamp) { // Determines how many days ago the time instance was
+  determineThisWeek: function (timestamp) { // Determines how many days ago the time instance was
     var dayDiff = moment().diff(timestamp, "days");
 
     return dayDiff;
+  },
+  getAllTime: function () { // Fetch time node from Firebase and parse it out for current user
+    firebase.database().ref('time/users/').once('value').then(function (snapshot) {
+      data.allTime = snapshot.val();
+      data.timeObject = data.allTime[auth.uid];
+
+      var weekDataArray = data.calculatePersonalTime();
+
+      console.log("Week data for display ")
+      console.log(weekDataArray)
+
+      var timeDataArray = data.parseAllTime();
+
+      console.log("Total data for display ")
+      console.log(timeDataArray)
+
+      notificationService.postNotification('ALL_TIME_FETCHED', null);
+    });
+  },
+  parseAllTime: function () { // Parse all time object into a format for display to read
+    var userKeys = Object.keys(this.usersObject);
+    var timeUserKeys = Object.keys(this.allTime);
+    var i;
+    var j = userKeys.length;
+    var k;
+    var l = timeUserKeys.length;
+    var payload = [];
+
+    for (i = 0; i < j; i++) {
+      for (k = 0; k < l; k++) {
+        if (userKeys[i] === timeUserKeys[k]) {
+          var timeObject = this.allTime[userKeys[i]];
+          var totalTime = this.determineTotalTime(timeObject);
+          var avgTime;
+
+          if (totalTime[1] === 0) {
+            avgTime = 0;
+          }
+          else {
+            avgTime = totalTime[0] / totalTime[1];
+          }
+
+          payload.push(
+            {
+              dailyAvg: avgTime,
+              total: totalTime[0],
+              username: this.usersObject[userKeys[i]].email
+            });
+        }
+      }
+    }
+
+    return payload;
+  },
+  determineTotalTime: function (timeObject) { // Calculates total time for the previous week and filters per day
+    var keys = Object.keys(timeObject);
+    var dayIndex = 0;
+    var i;
+    var j = keys.length;
+    var totalTime = 0;
+    var days = 0;
+    var timeArr = new Array(7).fill(0);
+
+    if (keys.length !== 0) {
+      for (i = 0; i < j; i++) {
+
+        if (timeObject[keys[i]].stop !== undefined) {
+          dayIndex = this.determineThisWeek(timeObject[keys[i]].start);
+          days = 7;
+
+          if (dayIndex < 7) {
+            timeArr[dayIndex] += this.parseTimestamp(timeObject[keys[i]].start, timeObject[keys[i]].stop);
+          }
+        }
+        else {
+          console.log("null time: " + keys[i]);
+        }
+      }
+    }
+
+    j = timeArr.length;
+
+    for (i = 0; i < j; i++) {
+      if (timeArr[i] !== 0) {
+        days++;
+        totalTime += timeArr[i];
+      }
+    }
+
+    return [totalTime, days];
   },
   convertTime: function (hours) {
     // takes a floating point value representing hours and converts it to a string
