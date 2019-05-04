@@ -32,6 +32,7 @@ var data = {
   timeObject: {}, // Contains all time instances that user has tracked, fetched from Firebase
   timeLastWeek: new Array(7).fill(0), // Array that contains total time for each day, previous 7 days
   allTime: {}, // Object containing all time instances and child objects of those instances, by user
+  timeLastWeekNew: {},
   createTimeInstance: function () { // Creates a child on the time node in Firebase, per user
     this.timeInstance = database.ref("time/users/" + auth.uid + "/").push({}).key;
 
@@ -190,30 +191,21 @@ var data = {
   },
   calculateTotalTime: function () { // Calculates total time for the previous week and filters per day
     var keys = Object.keys(this.timeObject);
+    var lastWeekArray = new Array(7).fill(0);
     var dayIndex = 0;
+    var dayArray = [];
+    var lastWeek = [];
     var i;
     var j;
 
-    if (keys.length === 1) { // If only one time instance exists, avoid executing the loop - this violates DRY, but to avoid scoping issues...
-      if (this.timeObject.keys[0].stop !== undefined) { // Protect against instance where no start timestamp exists
-        dayIndex = this.determineThisWeek(this.timeObject[keys[0]].start);
-
-        if (dayIndex < 7) {
-          this.timeLastWeek[dayIndex] = this.parseTimestamp(this.timeObject[keys[0]].start, this.timeObject[keys[0]].stop);
-        }
-      }
-      else {
-        console.log("null time: " + keys[0]);
-      }
-    }
-    else if (keys.length !== 0) {
+    if (keys.length !== 0) { // If no time instance exists, avoid executing the loop
       for (i = 0, j = keys.length; i < j; i++) {
 
-        if (this.timeObject[keys[i]].stop !== undefined) {
+        if (this.timeObject[keys[i]].stop !== undefined) { // Protect against instance where no start timestamp exists
           dayIndex = this.determineThisWeek(this.timeObject[keys[i]].start);
 
           if (dayIndex < 7) {
-            this.timeLastWeek[dayIndex] += this.parseTimestamp(this.timeObject[keys[i]].start, this.timeObject[keys[i]].stop);
+            lastWeekArray[dayIndex] += this.parseTimestamp(this.timeObject[keys[i]].start, this.timeObject[keys[i]].stop);
           }
         }
         else {
@@ -222,9 +214,22 @@ var data = {
       }
     }
 
-    this.timeLastWeek = this.timeLastWeek.reverse(); // Make array in ascending days order
+    for (i = 0, j = 7; i < j; i++) {
+      dayArray[i] = moment().subtract(i, 'day').format("YYYY-MM-DD");
+    }
 
-    console.log(this.timeLastWeek + " minutes");
+    dayArray - dayArray.reverse();
+    lastWeekArray = lastWeekArray.reverse(); // Make array in ascending days order
+
+    for (i = 0, j = dayArray.length; i < j; i++) {
+      lastWeek[i] = {
+        time: lastWeekArray[i],
+        date: dayArray[i]
+      }
+    }
+
+    console.log(lastWeek);
+    console.log("minutes");
   },
   parseTimestamp: function (start, stop) { // Use Moment JS to determine the time between timestamps in minutes
     start = moment(start);
