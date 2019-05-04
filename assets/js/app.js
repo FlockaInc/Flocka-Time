@@ -1,3 +1,4 @@
+
 $(function () {
   var app = {
     authListener: notificationService.addObserver('AUTH_SIGNIN', this, handleSignIn),
@@ -23,15 +24,18 @@ $(function () {
   function handleFlockalogDownload() {
     console.log('handling flockalog download');
     //Pulling data for leaderboard and calling function to populate data
-    console.table(data.getFlockalogsLeaderboard());
+    // console.table(data.getFlockalogsLeaderboard());
     var flockaTable = data.getFlockalogsLeaderboard();
     for (i = 0; i < flockaTable.length; i++) {
       leaderboardDisplay(i, flockaTable[i].username, flockaTable[i].total, flockaTable[i].dailyAvg);
+      console.log(flockaTable[i]);
     }
     //Pulling data for user daily time and calling function to display the bar graph
     var flockaDay = (data.getCurrentUserDailyFlockatime())
-    for (i = 0; i < flockaDay.length; i++) {
+    for (i=0; i<flockaDay.length; i++){
+      console.log(flockaDay[i]);
       flockaDayConverted = flockaDay[i].time.toFixed(2);
+      console.log(flockaDayConverted);
       flockaDataset.push(flockaDayConverted);
     }
     barGraphDisplay();
@@ -47,6 +51,7 @@ $(function () {
       $(".welcomeContainer").removeClass("hide");
       $("#welcomeElement").text(" Welcome!");
       $('#sign-in-form').modal('hide');
+      (console.log("signed in"));
 
       $(".apiKey").removeClass("hide");
       $(".apiKey").on("click", function () {
@@ -103,7 +108,7 @@ $(function () {
     var button = $(this).val();
     var email = $("#" + button + "Email").val();
     var errorEmail = $("<p>");
-    var errorEmail1 = $("<p>")
+    var errorEmail1 = $("<p>");
 
     if (button === "signin") {
       console.log('Sign in button pressed');
@@ -111,6 +116,7 @@ $(function () {
 
       $("#signinEmail").val("");
       $("#signinPassword").val("");
+
     } else if (button === "signup") {
 
       var queryURL = 'https://pozzad-email-validator.p.rapidapi.com/emailvalidator/validateEmail/' + email;
@@ -129,6 +135,7 @@ $(function () {
 
           if ((response.isValid === true) || (auth.uid === false)) {
             $(".errorEmail1").remove();
+            $(".errorEmail").remove();
             console.log('Sign up button pressed');
             auth.signUp(email, $("#signupPassword").val());
             errorEmail1.addClass("errorEmail1")
@@ -138,6 +145,7 @@ $(function () {
             $("#signupPassword").val("");
             // $('#sign-in-form').modal('hide');
           } else {
+            $(".errorEmail1").remove();
             $(".errorEmail").remove();
             errorEmail.addClass("errorEmail")
             errorEmail.text("Error: not a valid email address")
@@ -189,12 +197,16 @@ $(function () {
   $(".signOutButton").on("click", function () {
     firebase.auth().signOut();
     signInDisplay();
+    $("#apiShow").empty();
     $("#leaderboardTableBody").empty();
   });
 
   $(".signInButton").on("click", function () {
     $(".modal-body").show();
   })
+
+
+  
 });
 
 //D3 bar graph for User Code Time Last 7 Days
@@ -242,11 +254,10 @@ function barGraphDisplay() {
       return barWidth * i;
     })
     .attr("fill", "white");
-};
+  };
 
 //Creating Leaderboard Display
 function leaderboardDisplay(rank, userName, total, dailyAverage) {
-  // $("#leaderboardTableBody").empty();
   rank++;
   var td1 = $("<td>");
   td1.text(rank);
@@ -262,5 +273,7 @@ function leaderboardDisplay(rank, userName, total, dailyAverage) {
   row.append(td2);
   row.append(td3);
   row.append(td4);
+  console.log(name);
+
   $("#leaderboardTableBody").append(row);
 }
