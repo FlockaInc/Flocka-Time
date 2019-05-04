@@ -110,8 +110,7 @@ $(function () {
       $("#signinEmail").val("");
       $("#signinPassword").val("");
 
-    } 
-else if (button === "signup") {
+    } else if (button === "signup") {
 
       var queryURL = 'https://pozzad-email-validator.p.rapidapi.com/emailvalidator/validateEmail/' + email;
 
