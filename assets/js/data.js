@@ -18,7 +18,7 @@ var data = {
     });
   },
   createUser: function (email) {
-    database.ref("users/" + auth.uid + "/").set(email);
+    database.ref("users/" + auth.uid + "/").update(email);
   },
   timeInstance: "", // Id that represents an instance of user tracking their time 
   timeObject: {}, // Contains all time instances that user has tracked, fetched from Firebase
