@@ -205,7 +205,7 @@ var data = {
     if ((this.timeObject !== undefined) &&
         (this.timeObject !== null)) {
           
-          keys = Object.keys(this.timeObject);
+      keys = Object.keys(this.timeObject);
     }
 
     var i;
@@ -256,7 +256,7 @@ var data = {
     start = moment(start);
     stop = moment(stop);
 
-    var timeDiff = stop.diff(start, "minutes", true);
+    var timeDiff = stop.diff(start, "hours", true);
 
     return timeDiff;
   },
@@ -265,20 +265,22 @@ var data = {
 
     return dayDiff;
   },
+  weekDataArray: [],
+  timeDataArray: [],
   getAllTime: function () { // Fetch time node from Firebase and parse it out for current user
     firebase.database().ref('time/users/').once('value').then(function (snapshot) {
       data.allTime = snapshot.val();
       data.timeObject = data.allTime[auth.uid];
 
-      var weekDataArray = data.calculatePersonalTime();
+      data.weekDataArray = data.calculatePersonalTime();
 
       console.log("Week data for display ")
-      console.log(weekDataArray)
+      console.log(data.weekDataArray)
 
-      var timeDataArray = data.parseAllTime();
+      data.timeDataArray = data.parseAllTime();
 
       console.log("Total data for display ")
-      console.log(timeDataArray)
+      console.log(data.timeDataArray)
 
       notificationService.postNotification('ALL_TIME_FETCHED', null);
     });
@@ -315,7 +317,8 @@ var data = {
         }
       }
     }
-
+    payload.sort(function (a, b) { return (b.total - a.total) });
+  
     return payload;
   },
   determineTotalTime: function (timeObject) { // Calculates total time for the previous week and filters per day
