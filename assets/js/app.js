@@ -1,15 +1,38 @@
-
 $(function () {
   var app = {
     authListener: notificationService.addObserver('AUTH_SIGNIN', this, handleSignIn),
     signOutListener: notificationService.addObserver('AUTH_SIGNOUT', this, handleSignOut),
-    getTimeListener: notificationService.addObserver('TIME_FETCHED', this, handleTime),
     flockalogListener: notificationService.addObserver('DATA_FLOCKALOGS_DOWNLOADED', this, handleFlockalogDownload),
+    getAllUsersListener: notificationService.addObserver('USERS_FETCHED', this, handleAllUsers),
+    getAllTimeListener: notificationService.addObserver('ALL_TIME_FETCHED', this, handleAllTime)
+  }
+
+  function handleAllUsers() {
+    data.getAllTime();
+  }
+
+  function handleAllTime() {
+    if (data.flockaflag === false) {
+      var flockaTable = data.parseAllTime();
+
+      for (i = 0; i < flockaTable.length; i++) {
+        leaderboardDisplay(i, flockaTable[i].username, flockaTable[i].total, flockaTable[i].dailyAvg);
+      }
+
+      var flockaDay = (data.calculatePersonalTime())
+
+      for (i = 0; i < flockaDay.length; i++) {
+        flockaDayConverted = flockaDay[i].time.toFixed(2);
+        flockaDataset.push(flockaDayConverted);
+      }
+      barGraphDisplay();
+    }
   }
 
   function handleSignIn() {
     console.log('user signed in');
     signInDisplay();
+    data.getAllUsers();
   }
 
   function handleSignOut() {
@@ -17,25 +40,19 @@ $(function () {
     signInDisplay();
   }
 
-  function handleTime() {
-    data.calculateTotalTime(); // This should trigger when display needs to update
-  }
-
   function handleFlockalogDownload() {
     console.log('handling flockalog download');
     //Pulling data for leaderboard and calling function to populate data
-    // console.table(data.getFlockalogsLeaderboard());
+
     var flockaTable = data.getFlockalogsLeaderboard();
+
     for (i = 0; i < flockaTable.length; i++) {
       leaderboardDisplay(i, flockaTable[i].username, flockaTable[i].total, flockaTable[i].dailyAvg);
-      console.log(flockaTable[i]);
     }
     //Pulling data for user daily time and calling function to display the bar graph
     var flockaDay = (data.getCurrentUserDailyFlockatime())
-    for (i=0; i<flockaDay.length; i++){
-      console.log(flockaDay[i]);
+    for (i = 0; i < flockaDay.length; i++) {
       flockaDayConverted = flockaDay[i].time.toFixed(2);
-      console.log(flockaDayConverted);
       flockaDataset.push(flockaDayConverted);
     }
     barGraphDisplay();
@@ -51,7 +68,8 @@ $(function () {
       $(".welcomeContainer").removeClass("hide");
       $("#welcomeElement").text(" Welcome!");
       $('#sign-in-form').modal('hide');
-      (console.log("signed in"));
+      $("#graphDiv").removeClass("hide");
+      $("#leaderboardTableBody").empty();
 
       $(".apiKey").removeClass("hide");
       $(".apiKey").on("click", function () {
@@ -60,22 +78,28 @@ $(function () {
           $("#apiShow").empty();
           var p = $("<p>");
           p.addClass('my-auto').text(auth.uid);
-          console.log(auth.uid)
+          // console.log(auth.uid)
           $("#apiShow").append(p);
           $(this).attr('data-state', 'show');
         } else {
-          $("#apiShow").empty();
+          $("#apiShow").empty(); 
           $(this).attr('data-state', 'hidden');
         }
       });
 
     } else {
+      $("#leaderboardTableBody").empty();
       $(".signInButton").removeClass("hide");
       $(".codeTimeStop").addClass("hide");
       $(".codeTimeStart").addClass("hide");
       $(".welcomeContainer").addClass("hide");
       $(".signOutButton").addClass("hide");
       $(".apiKey").addClass("hide");
+
+      var row = $("<tr>");
+      row.text("*** Sign In To Display Leaderboard ***");
+      row.addClass("text-center");
+      $("#leaderboardTableBody").append(row);
     }
   }
 
@@ -87,9 +111,9 @@ $(function () {
   var geoURL = "https://extreme-ip-lookup.com/json/"
 
   $.ajax({
-    url: geoURL,
-    method: "GET",
-  })
+      url: geoURL,
+      method: "GET",
+    })
     .then(function (response) {
       console.log(response)
       var p = $("<p>")
@@ -116,19 +140,18 @@ $(function () {
 
       $("#signinEmail").val("");
       $("#signinPassword").val("");
-
     } else if (button === "signup") {
 
       var queryURL = 'https://pozzad-email-validator.p.rapidapi.com/emailvalidator/validateEmail/' + email;
 
       $.ajax({
-        url: queryURL,
-        method: "GET",
-        headers: {
-          "X-RapidAPI-Host": "pozzad-email-validator.p.rapidapi.com",
-          "X-RapidAPI-Key": "26e065489amshedaf946a10f08c0p1fb64djsn3860730b77bf"
-        }
-      })
+          url: queryURL,
+          method: "GET",
+          headers: {
+            "X-RapidAPI-Host": "pozzad-email-validator.p.rapidapi.com",
+            "X-RapidAPI-Key": "26e065489amshedaf946a10f08c0p1fb64djsn3860730b77bf"
+          }
+        })
         .then(function (response) {
           console.log(response)
           console.log(response.isValid)
@@ -173,7 +196,7 @@ $(function () {
     var state = $(this).attr("state");
     if (state === "active") {
       data.updateTime("stop");
-      data.getTime();
+
       $(this).attr("state", "inactive");
       $(".codeTimeStart").attr("state", "active");
     }
@@ -199,25 +222,24 @@ $(function () {
     signInDisplay();
     $("#apiShow").empty();
     $("#leaderboardTableBody").empty();
+    $("#graphDiv").addClass("hide");
+    flockaDataset = [];
   });
 
   $(".signInButton").on("click", function () {
     $(".modal-body").show();
   })
-
-
-  
-});
-
-//D3 bar graph for User Code Time Last 7 Days
+  //D3 bar graph for User Code Time Last 7 Days
 var flockaDataset = [];
+
 function barGraphDisplay() {
+  d3.select("#barGraph").select("svg").remove();
   var dataset = flockaDataset;
   var svgWidth = 900;
   var svgHeight = 250;
   var barPadding = 5;
   var barWidth = (svgWidth / dataset.length);
-  var svg = d3.select('svg').attr("width", svgWidth).attr("height", svgHeight).attr("class", "bar-chart");
+  var svg = d3.select('#barGraph').append("svg").attr("width", svgWidth).attr("height", svgHeight).attr("class", "bar-chart");
 
   var yScale = d3.scaleLinear()
     .domain([0, d3.max(dataset)])
@@ -254,7 +276,8 @@ function barGraphDisplay() {
       return barWidth * i;
     })
     .attr("fill", "white");
-  };
+};
+});
 
 //Creating Leaderboard Display
 function leaderboardDisplay(rank, userName, total, dailyAverage) {
@@ -273,7 +296,6 @@ function leaderboardDisplay(rank, userName, total, dailyAverage) {
   row.append(td2);
   row.append(td3);
   row.append(td4);
-  console.log(name);
 
   $("#leaderboardTableBody").append(row);
 }
