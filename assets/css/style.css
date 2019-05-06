@@ -22,3 +22,18 @@ rect{
 .errorEmail, .errorEmail1{
     color: red;
 }
+
+.jumbotron{
+    box-shadow: 0px 0px 10px 10px rgba(21, 140, 170, 0.95);
+    margin: 20px 10px;
+}
+
+.bg{
+    background-image: url("/assets/flockback.png");
+    margin: 20px;
+    background-size: cover;
+}
+
+.data{
+    text-align: center;
+}

@@ -241,7 +241,7 @@ function barGraphDisplay() {
   var barWidth = (svgWidth / dataset.length);
   var svg = d3.select('#barGraph').append("svg").attr("width", svgWidth).attr("height", svgHeight).attr("class", "bar-chart");
 
-  var yScale = d3.scaleLinear()
+  var yScale = d3.scaleLinear() 
     .domain([0, d3.max(dataset)])
     .range([0, svgHeight]);
 
@@ -250,7 +250,7 @@ function barGraphDisplay() {
     .enter()
     .append("rect")
     .attr("y", function (d) {
-      return svgHeight - yScale(d);
+      return svgHeight - yScale(d) + 10;
     })
     .attr("height", function (d) {
       return yScale(d);
