@@ -32,8 +32,8 @@ function barGraphDisplay() {
 
   var width = 960 - margin.left - margin.right;
   var height = 500 - margin.top - margin.bottom;
-  var xScale = d3.scale.ordinal().rangeRoundBands([0, width], .03)
-  var yScale = d3.scale.linear()
+  var xScale = d3.scaleOrdinal().rangeRoundBands([0, width], .03);
+  var yScale = d3.scaleLinear()
     .range([height, 0]);
   var xAxis = d3.svg.axis()
     .scale(xScale)
@@ -47,10 +47,10 @@ function barGraphDisplay() {
     .append("g").attr("class", "container")
     .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-  xScale.domain(dataset.map(function (d) {
-    return d.food;
+  xScale.domain(data.map(function (d) {
+    return d.food; 
   }));
-  yScale.domain([0, d3.max(dataset, function (d) {
+  yScale.domain([0, d3.max(data, function (d) {
     return d.quantity;
   })]);
 
@@ -61,7 +61,7 @@ function barGraphDisplay() {
     .selectAll("text");
 
   svgContainer.selectAll(".bar")
-    .data(dataset)
+    .data(data)
     .enter()
     .append("rect")
     .attr("class", "bar")
@@ -77,7 +77,7 @@ function barGraphDisplay() {
     });
 
   svgContainer.selectAll(".text")
-    .data(dataset)
+    .data(data)
     .enter()
     .append("text")
     .attr("class", "label")
